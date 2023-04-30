@@ -237,7 +237,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					boss.bossStatus = ".none";
 				
 				//boss drawer
-				boss.drawBoss(getGraphics(), HeroLocX, HeroLocY, boss);
+				boss.draw(getGraphics(), HeroLocX, HeroLocY, boss);
 				boss.drawBars(getGraphics(), boss);
 			}
 			

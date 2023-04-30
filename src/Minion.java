@@ -1,14 +1,24 @@
 import java.awt.*;
 import java.util.Random;
 
-public class Minion 
+public class Minion implements Enemy 
 {
-	int HP, Spd, Dmg;
-	int locX, locY;
+	int HP;
+	int Spd;
+	int Dmg;
+	int maxHP;
+	int locX;
+	int locY;
 	double length;
 	Color color;
-	String effect, status = ".none";
-	double slope, wingSlope;
+	String effect;
+	String status = ".none";
+	String name = "";
+	String world = "";
+	double slope;
+	double wingSlope;
+	
+
 	
 	int[] xPoints = new int[3];
 	int[] yPoints = new int[3];
@@ -78,6 +88,15 @@ public class Minion
 			locX = rand.nextInt(1280);
 			locY = 960;
 		}
+	}
+	public void initialize(String name, String world, int health, int damage, int speed, String effect, Color color) {
+		this.name = name;
+		this.world = world;
+		this.HP = health;
+		this.maxHP = health;
+		this.Dmg = damage;
+		this.effect = effect;
+		this.color = color;
 	}
 	
 	public void draw(Graphics g, int heroX, int heroY, Minion minion)
