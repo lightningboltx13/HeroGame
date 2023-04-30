@@ -61,7 +61,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			update(getGraphics());
 			
 			boolean statusRead = true;
-			String status = "";
+			String heroStatus = "";
+			String bossStatus = "";
 			int duration = 0;
 			for(int i = 0; i < HeroStatus.length(); i++)
 			{
@@ -70,16 +71,27 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				else if(statusRead)
 					duration = (duration * 10) + Integer.parseInt(HeroStatus.charAt(i) + "");
 				else if(!statusRead)
-					status = status + HeroStatus.charAt(i);
+					heroStatus = heroStatus + HeroStatus.charAt(i);
 			}
 			
 			int speed = 5;
-			if(status.equals("boost"))
-				speed = 10;
-			if(status.equals("slow"))
-				speed = 2;
-			if(status.equals("stun"))
-				speed = 0;
+			switch (heroStatus) {
+				case "boost":
+					speed = 10;
+					break;
+				case "slow":
+					speed = 2;
+					break;
+				case "stun":
+					speed = 0;
+					break;
+				case "none":
+					//do nothing---none
+					break;
+				default:
+					System.err.println("Unknown Hero Status in Momvement: " + heroStatus);
+			}
+			
 			if(up)
 				HeroLocY -= speed;
 			if(down)
@@ -89,266 +101,28 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			if(right)
 				HeroLocX += speed;
 			
-			drawer.drawHero(getGraphics(), HeroLocX, HeroLocY, HeroPosition, status);
+			drawer.drawHero(getGraphics(), HeroLocX, HeroLocY, HeroPosition, heroStatus);
 			
 			HeroPosition = false;
 			
 			//run blast moves
 			if(blasts.length > 0)
 			{
-				try{
-					//Blast Movement, collision, and end of life
-					for(int i = 0; i < blasts.length; i++)
-					{
-						if(blasts[i].direction.equals("right"))
-						{
-							blasts[i].LocX += Math.cos(blasts[i].Slope)*5;
-							blasts[i].LocY += Math.sin(blasts[i].Slope)*5;
-						}
-						else if(blasts[i].direction.equals("left"))
-						{
-							blasts[i].LocX -= Math.cos(blasts[i].Slope)*5;
-							blasts[i].LocY -= Math.sin(blasts[i].Slope)*5;
-						}
-						else if(blasts[i].direction.equals("up"))
-						{
-							blasts[i].LocY -= 5;
-						}
-						else if(blasts[i].direction.equals("down"))
-						{
-							blasts[i].LocY += 5;
-						}
-						
-						if(boss.fighting)
-						{
-							//collision detection
-							double blastDis = Math.sqrt(Math.pow(boss.bossLocX - blasts[i].LocX, 2) + Math.pow(boss.bossLocY - blasts[i].LocY, 2));
-							if(blastDis <= 10)
-							{
-								blasts[i].hit = true;
-								boss.bossHealth -= blasts[i].Dmg;
-								bossEffectStat(powerSet[powerIndex].Effect, boss);
-							}
-						}
-						else
-						{
-							for(int a = 0; a < enemies.length; a++)
-							{
-								double blastDis = Math.sqrt(Math.pow(enemies[a].locX - blasts[i].LocX, 2) + Math.pow(enemies[a].locY - blasts[i].LocY, 2));
-								if(blastDis <= 5)
-								{
-									blasts[i].hit = true;
-									enemies[a].HP -= blasts[i].Dmg;
-									effectStat(blasts[i].effect, enemies[a]);
-								}
-							}
-						}
-						
-						double temp1, temp2;
-						temp1 = Math.pow(blasts[i].LocX - blasts[i].srtX, 2);
-						temp2 = Math.pow(blasts[i].LocY - blasts[i].srtY, 2);
-						double travled = Math.sqrt(temp1 + temp2);
-						if(travled >= blasts[i].Range*50)
-							blasts[i].hit = true;
-					}
-					
-					//blast array resizer
-					int blastCount = 0;
-					for(int i = 0; i < blasts.length; i++)
-						//counts blasts that aren't dead
-						if(!blasts[i].hit)
-							blastCount++;
-					for(int i = 0; i < blasts.length; i++)
-					{
-						//create temporary array to store blasts
-						Blast[] tempArray = new Blast[blastCount];
-						int tempCount = 0;
-						int numBlast = blasts.length;
-								
-						for(int m = 0; m < numBlast; m++)
-							if(!blasts[m].hit)
-							{
-								try{
-									tempArray[tempCount] = blasts[m];
-								}catch (ArrayIndexOutOfBoundsException ex){}
-							tempCount++;
-							}
-						blasts = tempArray;
-					}
-					for(int i = 0; i < blasts.length; i++)
-						blasts[i].drawBlast(getGraphics(), blasts[i]);
-				}catch (NullPointerException ex){}
+				thenIStartedBlasting();
 			}
 			//enemy spawn
 			if(!boss.fighting)
 			{
-				Enemy[] tempArray = enemies;
-				Enemy[] tempArray2;
-				int lifeCount = 0;
-				
-				try
-				{
-					for(int i = 0; i < tempArray.length; i++)
-						if(tempArray[i].HP > 0)
-							lifeCount++;
-				}catch (NullPointerException ex){}
-				
-				if(EnemyCount > 0)
-					tempArray2 = new Enemy[lifeCount + 1];
-				else
-					tempArray2 = new Enemy[lifeCount];
-				
-				try{
-					int count = 0;
-					for(int i = 0; i < tempArray.length; i++)
-						if(tempArray[i].HP > 0)
-						{
-							tempArray2[count] = tempArray[i];
-							count++;
-						}
-				}catch (NullPointerException ex){}
-				
-				if(EnemyCount > 0)
-				{
-					if(spawnReady == 10)
-					{
-						EnemyCount--;
-						Enemy tempEnemy = new Enemy();
-						tempArray2[tempArray2.length - 1] = tempEnemy;
-						spawnReady -= 10;
-					}
-					else
-					{
-						spawnReady++;
-					}
-				}
-				enemies = tempArray2;
-				if(enemies.length == 0)
-					boss.fighting = true;
+				spawnEnemy();
 			}
 			
 			
 			//enemy move, status updater
-			try{
-				for(int i = 0; i < enemies.length; i++)
-				{
-					boolean EstatusRead = true;
-					String Estatus = "";
-					int Eduration = 0;
-					for(int a = 0; a < enemies[i].status.length(); a++)
-					{
-						if(enemies[i].status.charAt(a) == '.')
-							EstatusRead = false;
-						else if(EstatusRead)
-							Eduration = (Eduration * 10) + Integer.parseInt(enemies[i].status.charAt(a) + "");
-						else if(!EstatusRead)
-							Estatus = Estatus + enemies[i].status.charAt(a);
-					}
-					
-					double enemySpeed = enemies[i].Spd;
-					if(Estatus.equals("slow"))
-						enemySpeed /= 2;
-					if(Estatus.equals("stun"))
-						enemySpeed = 0;
-					if(Estatus.equals("hurt"))
-						enemies[i].HP--;
-					if(!Estatus.equals("none") && !Estatus.equals("immunity"))
-					{
-						Eduration--;
-						if(Eduration == 0)
-							enemies[i].status = ".none";
-						else
-							enemies[i].status = Eduration + "." + Estatus;
-					}
-					if(enemies[i].locX == HeroLocX)
-					{
-						if(enemies[i].locY > HeroLocY)
-							enemies[i].locY -= enemySpeed;
-						else if(enemies[i].locY < HeroLocY)
-							enemies[i].locY += enemySpeed;
-						enemies[i].locX++;
-					}
-					else
-					{
-						int dir = 1;
-						if(enemies[i].locX > HeroLocX)
-							dir = -1;
-						enemies[i].locX = (int)(enemies[i].locX + dir*(Math.cos(enemies[i].slope)*enemySpeed));
-						enemies[i].locY = (int)(enemies[i].locY + dir*(Math.sin(enemies[i].slope)*enemySpeed));
-					}
-					
-					double temp1, temp2;
-					temp1 = Math.pow(enemies[i].locX - HeroLocX,2);
-					temp2 = Math.pow(enemies[i].locY - HeroLocY,2);
-					if(Math.sqrt(temp1 + temp2) <= 10)
-						enemyHit(enemies[i], i, status);
-					
-					enemies[i].enemyDraw(getGraphics(), HeroLocX, HeroLocY, enemies[i]);
-				}
-			}catch (NullPointerException ex){}
+			moveEnemy(heroStatus);
 			
-			if(mines.length > 0)
-			{
-				int mineCount = 0;
-				double mine1, mine2;
-				
-				if(!boss.fighting)
-				{
-					for(int i = 0; i < enemies.length; i++)
-					{
-						try{
-							for(int m = 0; m < mines.length; m++)
-							{
-								//enemies is null!!!
-								mine1 = Math.pow(enemies[i].locX - mines[m].locX, 2);
-								mine2 = Math.pow(enemies[i].locY - mines[m].locY, 2);
-								if(Math.sqrt(mine1 + mine2) <= 10)
-								{
-									enemies[i].HP -= 10;
-									mines[m].exploded = true;
-								}
-								else
-									mineCount++;
-							}
-						}catch (NullPointerException ex){}
-					}
-				}
-				else
-				{
-					for(int m = 0; m < mines.length; m++)
-					{
-						mine1 = Math.pow(boss.bossLocX - mines[m].locX, 2);
-						mine2 = Math.pow(boss.bossLocY - mines[m].locY, 2);
-						if(Math.sqrt(mine1 + mine2) <= 10)
-						{
-							boss.bossHealth -= 10;
-							mines[m].exploded = true;
-						}
-						else
-							mineCount++;
-					}
-				}
-				Mine[] tempArray = new Mine[mineCount];
-				int tempCount = 0;
-				for(int m = 0; m < mines.length; m++)
-				{
-					try{
-						if(!mines[m].exploded)
-						{
-							tempArray[tempCount] = mines[m];
-							tempCount++;
-						}
-					}catch (NullPointerException ex){}
-				}
-				mines = tempArray;
-			}
 			
-			//draw mines
-			try{
-				for(int m = 0; m < mines.length; m++)
-					mines[m].drawMine(getGraphics(),  mines[m]);
-			}catch (NullPointerException ex){}
-			
+			//attack with mines
+			attackWithMines();
 			
 			//boss actions
 			if(boss.fighting)
@@ -420,7 +194,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					if(Math.sqrt(temp1 + temp2) <=75)
 					{
 						int damage = boss.bossDmg;
-						if(status.equals("defend"))
+						if(heroStatus.contains(".defend"))
 							damage /= 2;
 						HeroHealth -= damage;
 						
@@ -453,7 +227,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				
 				//boss status
 				statusRead = true;
-				status = "";
+				bossStatus = "";
 				duration = 0;
 				for(int i = 0; i < boss.bossStatus.length(); i++)
 				{
@@ -462,17 +236,17 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					else if(statusRead)
 						duration = (duration * 10) + Integer.parseInt(boss.bossStatus.charAt(i) + "");
 					else if(!statusRead)
-						status = status + boss.bossStatus.charAt(i);
+						bossStatus = bossStatus + boss.bossStatus.charAt(i);
 				}
 				
 				if(duration > 0)
 				{
 					duration--;
-					if(status.equals("hurt"))
+					if(bossStatus.equals("hurt"))
 						boss.bossHealth--;
-					boss.bossStatus = duration + "." + status;
+					boss.bossStatus = duration + "." + bossStatus;
 				}
-				if(duration == 0)
+				else if(duration == 0)
 					boss.bossStatus = ".none";
 				
 				//boss drawer
@@ -533,7 +307,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			}
 				
 			statusRead = true;
-			status = "";
+			heroStatus = "";
 			duration = 0;
 			for(int i = 0; i < HeroStatus.length(); i++)
 			{
@@ -542,16 +316,16 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				else if(statusRead)
 					duration = (duration * 10) + Integer.parseInt(HeroStatus.charAt(i) + "");
 				else if(!statusRead)
-					status = status + HeroStatus.charAt(i);
+					heroStatus = heroStatus + HeroStatus.charAt(i);
 			}
 			
 			//Hero status
 			if(duration > 0)
 			{
 				duration--;
-				if(status.equals("hurt"))
+				if(heroStatus.equals("hurt"))
 					HeroHealth--;
-				HeroStatus = duration + "." + status;
+				HeroStatus = duration + "." + heroStatus;
 			}
 			if(duration == 0)
 				HeroStatus = ".none";
@@ -561,6 +335,261 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			timer.schedule(new testEvent(), 60);
 //			update(getGraphics());
 		}
+	}
+	
+	public void spawnEnemy() {
+		Enemy[] tempArray = enemies;
+		Enemy[] tempArray2;
+		int lifeCount = 0;
+		
+		try
+		{
+			for(int i = 0; i < tempArray.length; i++)
+				if(tempArray[i].HP > 0)
+					lifeCount++;
+		}catch (NullPointerException ex){}
+		
+		if(EnemyCount > 0)
+			tempArray2 = new Enemy[lifeCount + 1];
+		else
+			tempArray2 = new Enemy[lifeCount];
+		
+		try{
+			int count = 0;
+			for(int i = 0; i < tempArray.length; i++)
+				if(tempArray[i].HP > 0)
+				{
+					tempArray2[count] = tempArray[i];
+					count++;
+				}
+		}catch (NullPointerException ex){}
+		
+		if(EnemyCount > 0)
+		{
+			if(spawnReady == 10)
+			{
+				EnemyCount--;
+				Enemy tempEnemy = new Enemy();
+				tempArray2[tempArray2.length - 1] = tempEnemy;
+				spawnReady -= 10;
+			}
+			else
+			{
+				spawnReady++;
+			}
+		}
+		enemies = tempArray2;
+		if(enemies.length == 0)
+			boss.fighting = true;
+	}
+	
+	public void moveEnemy(String status) {
+		try{
+			for(int i = 0; i < enemies.length; i++)
+			{
+				boolean EstatusRead = true;
+				String Estatus = "";
+				int Eduration = 0;
+				for(int a = 0; a < enemies[i].status.length(); a++)
+				{
+					if(enemies[i].status.charAt(a) == '.')
+						EstatusRead = false;
+					else if(EstatusRead)
+						Eduration = (Eduration * 10) + Integer.parseInt(enemies[i].status.charAt(a) + "");
+					else if(!EstatusRead)
+						Estatus = Estatus + enemies[i].status.charAt(a);
+				}
+				
+				double enemySpeed = enemies[i].Spd;
+				if(Estatus.equals("slow"))
+					enemySpeed /= 2;
+				if(Estatus.equals("stun"))
+					enemySpeed = 0;
+				if(Estatus.equals("hurt"))
+					enemies[i].HP--;
+				if(!Estatus.equals("none") && !Estatus.equals("immunity"))
+				{
+					Eduration--;
+					if(Eduration == 0)
+						enemies[i].status = ".none";
+					else
+						enemies[i].status = Eduration + "." + Estatus;
+				}
+				if(enemies[i].locX == HeroLocX)
+				{
+					if(enemies[i].locY > HeroLocY)
+						enemies[i].locY -= enemySpeed;
+					else if(enemies[i].locY < HeroLocY)
+						enemies[i].locY += enemySpeed;
+					enemies[i].locX++;
+				}
+				else
+				{
+					int dir = 1;
+					if(enemies[i].locX > HeroLocX)
+						dir = -1;
+					enemies[i].locX = (int)(enemies[i].locX + dir*(Math.cos(enemies[i].slope)*enemySpeed));
+					enemies[i].locY = (int)(enemies[i].locY + dir*(Math.sin(enemies[i].slope)*enemySpeed));
+				}
+				
+				double temp1, temp2;
+				temp1 = Math.pow(enemies[i].locX - HeroLocX,2);
+				temp2 = Math.pow(enemies[i].locY - HeroLocY,2);
+				if(Math.sqrt(temp1 + temp2) <= 10)
+					enemyHit(enemies[i], i, status);
+				
+				enemies[i].enemyDraw(getGraphics(), HeroLocX, HeroLocY, enemies[i]);
+			}
+		}catch (NullPointerException ex){}
+	}
+	public void thenIStartedBlasting() {
+		try{
+			//Blast Movement, collision, and end of life
+			for(int i = 0; i < blasts.length; i++)
+			{
+				if(blasts[i].direction.equals("right"))
+				{
+					blasts[i].LocX += Math.cos(blasts[i].Slope)*5;
+					blasts[i].LocY += Math.sin(blasts[i].Slope)*5;
+				}
+				else if(blasts[i].direction.equals("left"))
+				{
+					blasts[i].LocX -= Math.cos(blasts[i].Slope)*5;
+					blasts[i].LocY -= Math.sin(blasts[i].Slope)*5;
+				}
+				else if(blasts[i].direction.equals("up"))
+				{
+					blasts[i].LocY -= 5;
+				}
+				else if(blasts[i].direction.equals("down"))
+				{
+					blasts[i].LocY += 5;
+				}
+				
+				if(boss.fighting)
+				{
+					//collision detection
+					double blastDis = Math.sqrt(Math.pow(boss.bossLocX - blasts[i].LocX, 2) + Math.pow(boss.bossLocY - blasts[i].LocY, 2));
+					if(blastDis <= 10)
+					{
+						blasts[i].hit = true;
+						boss.bossHealth -= blasts[i].Dmg;
+						bossEffectStat(powerSet[powerIndex].Effect, boss);
+					}
+				}
+				else
+				{
+					for(int a = 0; a < enemies.length; a++)
+					{
+						double blastDis = Math.sqrt(Math.pow(enemies[a].locX - blasts[i].LocX, 2) + Math.pow(enemies[a].locY - blasts[i].LocY, 2));
+						if(blastDis <= 5)
+						{
+							blasts[i].hit = true;
+							enemies[a].HP -= blasts[i].Dmg;
+							effectStat(blasts[i].effect, enemies[a]);
+						}
+					}
+				}
+				
+				double temp1, temp2;
+				temp1 = Math.pow(blasts[i].LocX - blasts[i].srtX, 2);
+				temp2 = Math.pow(blasts[i].LocY - blasts[i].srtY, 2);
+				double travled = Math.sqrt(temp1 + temp2);
+				if(travled >= blasts[i].Range*50)
+					blasts[i].hit = true;
+			}
+			
+			//blast array resizer
+			int blastCount = 0;
+			for(int i = 0; i < blasts.length; i++)
+				//counts blasts that aren't dead
+				if(!blasts[i].hit)
+					blastCount++;
+			for(int i = 0; i < blasts.length; i++)
+			{
+				//create temporary array to store blasts
+				Blast[] tempArray = new Blast[blastCount];
+				int tempCount = 0;
+				int numBlast = blasts.length;
+						
+				for(int m = 0; m < numBlast; m++)
+					if(!blasts[m].hit)
+					{
+						try{
+							tempArray[tempCount] = blasts[m];
+						}catch (ArrayIndexOutOfBoundsException ex){}
+					tempCount++;
+					}
+				blasts = tempArray;
+			}
+			for(int i = 0; i < blasts.length; i++)
+				blasts[i].drawBlast(getGraphics(), blasts[i]);
+		}catch (NullPointerException ex){}
+	}
+	
+	public void attackWithMines() {
+		if(mines.length > 0)
+		{
+			int mineCount = 0;
+			double mine1, mine2;
+			
+			if(!boss.fighting)
+			{
+				for(int i = 0; i < enemies.length; i++)
+				{
+					try{
+						for(int m = 0; m < mines.length; m++)
+						{
+							//enemies is null!!!
+							mine1 = Math.pow(enemies[i].locX - mines[m].locX, 2);
+							mine2 = Math.pow(enemies[i].locY - mines[m].locY, 2);
+							if(Math.sqrt(mine1 + mine2) <= 10)
+							{
+								enemies[i].HP -= 10;
+								mines[m].exploded = true;
+							}
+							else
+								mineCount++;
+						}
+					}catch (NullPointerException ex){}
+				}
+			}
+			else
+			{
+				for(int m = 0; m < mines.length; m++)
+				{
+					mine1 = Math.pow(boss.bossLocX - mines[m].locX, 2);
+					mine2 = Math.pow(boss.bossLocY - mines[m].locY, 2);
+					if(Math.sqrt(mine1 + mine2) <= 10)
+					{
+						boss.bossHealth -= 10;
+						mines[m].exploded = true;
+					}
+					else
+						mineCount++;
+				}
+			}
+			Mine[] tempArray = new Mine[mineCount];
+			int tempCount = 0;
+			for(int m = 0; m < mines.length; m++)
+			{
+				try{
+					if(!mines[m].exploded)
+					{
+						tempArray[tempCount] = mines[m];
+						tempCount++;
+					}
+				}catch (NullPointerException ex){}
+			}
+			mines = tempArray;
+		}
+		
+		//draw mines
+		try{
+			for(int m = 0; m < mines.length; m++)
+				mines[m].drawMine(getGraphics(),  mines[m]);
+		}catch (NullPointerException ex){}
+		
 	}
 
 	public void close()
