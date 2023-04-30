@@ -2,24 +2,29 @@ import java.awt.*;
 
 public class Boss implements Enemy
 {
-	int bossHealth;
-	int bossSpd;
-	int bossDmg;
-	int bossMaxHealth;
+	private int health;
+	private int speed;
+	private int damage;
+	private int maxHealth;
 	
-	double bossLocX = 640;
-	double bossLocY = 480;
+	private double locationX = 640;
+	private double locationY = 480;
 	
+	//TODO: What's this for/how is it different ? why don't minions have attack?
 	int attack = 150;
 	int moveCount = 0;
 	double tempSlope = 0;
 	
-	String bossName;
-	String bossEffect; 
-	String bossStatus = ".none";
-	String world;
+	private String name;
+	private String effect; 
+	private String status = ".none";
 	
-	Color bossColor;
+	//TODO: Why do we store this?
+	private String world;
+	
+	private Color color;
+	
+	//TODO: boss only thing?
 	boolean fighting = false;
 	double[] xPoints = new double[4];
 	double[] yPoints = new double[4];
@@ -28,33 +33,40 @@ public class Boss implements Enemy
 		//blank constructor showing that we acknowledge that we're doing nothing.
 	}
 	
+	@Override
 	public void initialize(String name, String world, int health, int damage, int speed, String effect, Color color) {
-		this.bossName = name;
+		this.name = name;
 		this.world = world;
-		this.bossHealth = health;
-		this.bossMaxHealth = health;
-		this.bossDmg = damage;
-		this.bossSpd = speed;
-		this.bossEffect = effect;
-		this.bossColor = color;
+		this.health = health;
+		this.maxHealth = health;
+		this.damage = damage;
+		this.speed = speed;
+		this.effect = effect;
+		this.color = color;
+	}
+	
+	@Override
+	public void setLocation(int x, int y) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void draw(Graphics g, int heroX, int heroY, Boss boss)
 	{
-		double slope = Math.atan((double)(heroY - boss.bossLocY)/(heroX - boss.bossLocX));
-		double wingSlope = Math.atan((double)-(heroX - boss.bossLocX)/(heroY - boss.bossLocY));
+		double slope = Math.atan((double)(heroY - boss.locationY)/(heroX - boss.locationX));
+		double wingSlope = Math.atan((double)-(heroX - boss.locationX)/(heroY - boss.locationY));
 
-		xPoints[0] = boss.bossLocX;
-		yPoints[0] = boss.bossLocY;
+		xPoints[0] = boss.locationX;
+		yPoints[0] = boss.locationY;
 		
-		xPoints[1] = boss.bossLocX + (Math.cos(slope)*40) + (Math.cos(wingSlope)*25);
-		yPoints[1] = boss.bossLocY + (Math.sin(slope)*40) + (Math.sin(wingSlope)*25);
+		xPoints[1] = boss.locationX + (Math.cos(slope)*40) + (Math.cos(wingSlope)*25);
+		yPoints[1] = boss.locationY + (Math.sin(slope)*40) + (Math.sin(wingSlope)*25);
 		
-		xPoints[2] = boss.bossLocX + Math.cos(slope)*25;
-		yPoints[2] = boss.bossLocY + Math.sin(slope)*25;
+		xPoints[2] = boss.locationX + Math.cos(slope)*25;
+		yPoints[2] = boss.locationY + Math.sin(slope)*25;
 		
-		xPoints[3] = boss.bossLocX + (Math.cos(slope)*40 - Math.cos(wingSlope)*25);
-		yPoints[3] = boss.bossLocY + (Math.sin(slope)*40 - Math.sin(wingSlope)*25);
+		xPoints[3] = boss.locationX + (Math.cos(slope)*40 - Math.cos(wingSlope)*25);
+		yPoints[3] = boss.locationY + (Math.sin(slope)*40 - Math.sin(wingSlope)*25);
 
 
 		int[] drawPointsX = new int[4];
@@ -62,19 +74,19 @@ public class Boss implements Enemy
 		
 		for(int i = 0; i < 4; i++)
 		{
-			if(boss.bossLocX < heroX)
+			if(boss.locationX < heroX)
 			{
 				xPoints[i] *= -1;
-				xPoints[i] += 2*boss.bossLocX;
+				xPoints[i] += 2*boss.locationX;
 				yPoints[i] *= -1;
-				yPoints[i] += 2*boss.bossLocY;
+				yPoints[i] += 2*boss.locationY;
 			}
 			drawPointsX[i] = (int) xPoints[i];
 			drawPointsY[i] = (int) yPoints[i];
 		}
 		
-		g.setColor(boss.bossColor);
-		if(boss.bossName.equals("Clock"))
+		g.setColor(boss.color);
+		if(boss.name.equals("Clock"))
 			g.setColor(Color.white);
 		g.fillPolygon(drawPointsX, drawPointsY, 4);
 	}
@@ -82,8 +94,8 @@ public class Boss implements Enemy
 	public void drawArea(Graphics g, double Xloc, double Yloc, Boss boss)
 	{
 
-		g.setColor(boss.bossColor);
-		if(boss.bossName.equals("Clock"))
+		g.setColor(boss.color);
+		if(boss.name.equals("Clock"))
 			g.setColor(Color.white);
 		g.drawOval((int)Xloc - 75, (int)Yloc - 75, 150, 150);
 	}
@@ -91,9 +103,96 @@ public class Boss implements Enemy
 	public void drawBars(Graphics g, Boss boss)
 	{
 		g.setColor(Color.white);
-		g.fillRect(800, 50, boss.bossMaxHealth*2, 25);
+		g.fillRect(800, 50, boss.maxHealth*2, 25);
 		g.setColor(Color.RED);
-		g.fillRect(800, 50, boss.bossHealth*2, 25);
+		g.fillRect(800, 50, boss.health*2, 25);
+	}
+
+	@Override
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	@Override
+	public int getHealth() {
+		return this.health;
+	}
+
+	@Override
+	public void subtractHealth(int health) {
+		//TODO: Check for negative values
+		this.health = this.getHealth() - health;
+	}
+	
+	@Override
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+	@Override
+	public int getSpeed() {
+		return this.speed;
+	}
+
+	@Override
+	public void setDamage(int damage) {
+		this.damage = damage;
+	}
+	@Override
+	public int getDamage() {
+		return this.damage;
+	}
+	
+	@Override
+	public void setLocationX(double x) {
+		this.locationX = x;
+	}
+	@Override
+	public double getLocationX() {
+		return this.locationX;
+	}
+	@Override
+	public void addLocationX(int modifier) {
+		this.locationX = this.getLocationX() + modifier;
+	}
+	@Override
+	public void addLocationX(double modifier) {
+		this.locationX = this.getLocationX() + modifier;
+	}
+	
+	@Override
+	public void setLocationY(double y) {
+		this.locationY = y;
+	}
+	@Override
+	public double getLocationY() {
+		return this.locationY;
+	}
+	@Override
+	public void addLocationY(int modifier) {
+		this.locationY = this.getLocationY() + modifier;
+	}
+	@Override
+	public void addLocationY(double modifier) {
+		this.locationY = this.getLocationY() + modifier;
+	}
+	
+	@Override
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	@Override
+	public String getStatus() {
+		return this.status;
+	}
+
+	@Override
+	public void setEffect(String effect) {
+		this.effect = effect;
+	}
+
+	@Override
+	public String getEffect() {
+		return this.effect;
 	}
 	
 }

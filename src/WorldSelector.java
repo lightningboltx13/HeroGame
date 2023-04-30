@@ -132,6 +132,7 @@ public class WorldSelector extends Frame implements ActionListener, MouseListene
 					}
 					reader.close();
 				}catch(IOException e1){
+					System.err.println("IOException while reading boss data for initialization. " + e1.getMessage());
 					e1.printStackTrace();
 				}
 				
