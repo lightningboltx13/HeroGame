@@ -231,7 +231,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				{
 					duration--;
 					if(bossStatus.equals("hurt")) //TODO shouldn't this be related to damage?
-						boss.lossHealth(1);
+						boss.loseHealth(1);
 					boss.setStatus(duration + "." + bossStatus);
 				}
 				else if(duration == 0)
@@ -403,7 +403,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				if(Estatus.contains("stun"))
 					minionSpeed = 0;
 				if(Estatus.contains("hurt"))
-					minions[i].lossHealth(1);
+					minions[i].loseHealth(1);
 				if(!Estatus.contains("none") && !Estatus.contains("immunity"))
 				{
 					Eduration--;
@@ -470,7 +470,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					if(blastDis <= 10)
 					{
 						blasts[i].hit = true;
-						boss.lossHealth(blasts[i].Dmg);
+						boss.loseHealth(blasts[i].Dmg);
 						bossEffectStat(powerSet[powerIndex].Effect, boss);
 					}
 				}
@@ -482,7 +482,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						if(blastDis <= 5)
 						{
 							blasts[i].hit = true;
-							minions[a].lossHealth(blasts[i].Dmg);
+							minions[a].loseHealth(blasts[i].Dmg);
 							applyHeroEffectToMinion(blasts[i].effect, minions[a]);
 						}
 					}
@@ -542,7 +542,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 							mine2 = Math.pow(minions[i].getLocationY() - mines[m].locY, 2);
 							if(Math.sqrt(mine1 + mine2) <= 10)
 							{
-								minions[i].lossHealth(10);
+								minions[i].loseHealth(10);
 								mines[m].exploded = true;
 							}
 							else
@@ -559,7 +559,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					mine2 = Math.pow(boss.getLocationY() - mines[m].locY, 2);
 					if(Math.sqrt(mine1 + mine2) <= 10)
 					{
-						boss.lossHealth(10);
+						boss.loseHealth(10);
 						mines[m].exploded = true;
 					}
 					else
@@ -721,7 +721,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			temp2 = Math.pow(boss.getLocationY() - fistY,  2);
 			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
 			{
-				boss.lossHealth(powerSet[powerIndex].Dmg);
+				boss.loseHealth(powerSet[powerIndex].Dmg);
 				bossEffectStat(powerSet[powerIndex].Effect, boss);
 			}
 		}
@@ -733,7 +733,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				temp2 = Math.pow(minions[i].getLocationY() - fistY,  2);
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
 				{
-					minions[i].lossHealth(powerSet[powerIndex].Dmg);
+					minions[i].loseHealth(powerSet[powerIndex].Dmg);
 					applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 				}
 			}
@@ -789,7 +789,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			temp2 = Math.pow(boss.getLocationY() - HeroLocY,  2);
 			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
 			{
-				boss.lossHealth(powerSet[powerIndex].Dmg);
+				boss.loseHealth(powerSet[powerIndex].Dmg);
 				bossEffectStat(powerSet[powerIndex].Effect, boss);
 			}
 		}
@@ -801,7 +801,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				temp2 = Math.pow(minions[i].getLocationY() - HeroLocY,  2);
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
 				{
-					minions[i].lossHealth(powerSet[powerIndex].Dmg);
+					minions[i].loseHealth(powerSet[powerIndex].Dmg);
 					applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 				}
 			}
@@ -828,7 +828,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						if(Eslope1 <= slope && Eslope2 >= slope)
 						{
-							boss.lossHealth(powerSet[powerIndex].Dmg);
+							boss.loseHealth(powerSet[powerIndex].Dmg);
 							bossEffectStat(powerSet[powerIndex].Effect, boss);
 						}
 					}
@@ -837,7 +837,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						if(Eslope1 >= slope && Eslope2 <= slope)
 						{
-							boss.lossHealth(powerSet[powerIndex].Dmg);
+							boss.loseHealth(powerSet[powerIndex].Dmg);
 							bossEffectStat(powerSet[powerIndex].Effect, boss);
 						}
 					}
@@ -855,7 +855,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						if(Eslope1 >= slope && Eslope2 <= slope)
 						{
-							boss.lossHealth(powerSet[powerIndex].Dmg);
+							boss.loseHealth(powerSet[powerIndex].Dmg);
 							bossEffectStat(powerSet[powerIndex].Effect, boss);
 						}
 					}
@@ -864,7 +864,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						if(Eslope1 <= slope && Eslope2 >= slope)
 						{
-							boss.lossHealth(powerSet[powerIndex].Dmg);
+							boss.loseHealth(powerSet[powerIndex].Dmg);
 							bossEffectStat(powerSet[powerIndex].Effect, boss);
 						}
 					}
@@ -893,7 +893,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
-								minions[i].lossHealth(powerSet[powerIndex].Dmg);
+								minions[i].loseHealth(powerSet[powerIndex].Dmg);
 								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 							}
 						}
@@ -902,7 +902,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
-								minions[i].lossHealth(powerSet[powerIndex].Dmg);
+								minions[i].loseHealth(powerSet[powerIndex].Dmg);
 								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 							}
 						}
@@ -921,7 +921,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
-								minions[i].lossHealth(powerSet[powerIndex].Dmg);
+								minions[i].loseHealth(powerSet[powerIndex].Dmg);
 								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 							}
 						}
@@ -930,7 +930,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
-								minions[i].lossHealth(powerSet[powerIndex].Dmg);
+								minions[i].loseHealth(powerSet[powerIndex].Dmg);
 								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 							}
 						}

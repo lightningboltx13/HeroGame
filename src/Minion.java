@@ -199,7 +199,7 @@ public class Minion implements Enemy
 		return this.health;
 	}
 	@Override
-	public void lossHealth(int health) {
+	public void loseHealth(int health) {
 		//TODO: Check for negative values
 		this.health = this.getHealth() - health;
 	}
