@@ -74,7 +74,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			}
 			
 			
-			int speed = checkHeroStatus(heroStatus);
+			int speed = 5;
+			speed = checkHeroStatus(speed, duration, heroStatus);
 			
 			
 			if(up)
@@ -214,7 +215,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				statusRead = true;
 				String bossStatus = "";
 				duration = 0;
-				System.out.println("Boss Status: " + bossStatus);
+				System.out.println("Boss Status: " + boss.bossStatus);
 				for(int i = 0; i < boss.bossStatus.length(); i++)
 				{
 					if(boss.bossStatus.charAt(i) == '.')
@@ -291,39 +292,13 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					close();
 				}
 			}
-				
-			statusRead = true;
-			heroStatus = "";
-			duration = 0;
-			for(int i = 0; i < HeroStatus.length(); i++)
-			{
-				if(HeroStatus.charAt(i) == '.')
-					statusRead = false;
-				else if(statusRead)
-					duration = (duration * 10) + Integer.parseInt(HeroStatus.charAt(i) + "");
-				else if(!statusRead)
-					heroStatus = heroStatus + HeroStatus.charAt(i);
-			}
-			
-			//Hero status
-			if(duration > 0)
-			{
-				duration--;
-				if(heroStatus.equals("hurt"))
-					HeroHealth--;
-				HeroStatus = duration + "." + heroStatus;
-			}
-			if(duration == 0)
-				HeroStatus = ".none";
-
 
 //			update(getGraphics());
 			timer.schedule(new testEvent(), 60);
 //			update(getGraphics());
 		}
 	}
-	public int checkHeroStatus(String heroStatus) {
-		int speed = 5;
+	public int checkHeroStatus(int speed, int duration, String heroStatus) {
 		switch (heroStatus) {
 		case "boost":
 			speed = 10;
@@ -337,9 +312,23 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		case "none":
 			//do nothing---none
 			break;
+		case "hurt":
+			HeroHealth--;
+			break;
+			//need to account for immunity and defend still?
 		default:
 			System.err.println("Unknown Hero Status in Momvement: " + heroStatus);
-	}
+		}
+		//Hero status
+		if(duration > 0)
+		{
+			duration--;
+			HeroStatus = duration + "." + heroStatus;
+		}
+		if(duration == 0)
+			HeroStatus = ".none"; 
+			//TODO: if stacking statuses need to modify to not remove all statuses here.
+
 		return speed;
 	}
 	
@@ -407,13 +396,13 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				}
 				
 				double enemySpeed = enemies[i].Spd;
-				if(Estatus.equals("slow"))
+				if(Estatus.contains("slow"))
 					enemySpeed /= 2;
-				if(Estatus.equals("stun"))
+				if(Estatus.contains("stun"))
 					enemySpeed = 0;
-				if(Estatus.equals("hurt"))
+				if(Estatus.contains("hurt"))
 					enemies[i].HP--;
-				if(!Estatus.equals("none") && !Estatus.equals("immunity"))
+				if(!Estatus.contains("none") && !Estatus.contains("immunity"))
 				{
 					Eduration--;
 					if(Eduration == 0)
@@ -492,7 +481,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							blasts[i].hit = true;
 							enemies[a].HP -= blasts[i].Dmg;
-							effectStat(blasts[i].effect, enemies[a]);
+							applyHeroEffectToEnemy(blasts[i].effect, enemies[a]);
 						}
 					}
 				}
@@ -582,6 +571,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				try{
 					if(!mines[m].exploded)
 					{
+						//TODO: Might have an array index out of bounds, need to look into
+						//System.out.println("mineCount: " + mineCount);
+						//System.out.println("tempArray Index: " + tempCount);
+						//System.out.println("mines Index: " + m);
 						tempArray[tempCount] = mines[m];
 						tempCount++;
 					}
@@ -603,14 +596,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		this.hide();
 	}
 	
-	public void enemyHit(Enemy enemy, int index, String status)
+	public void enemyHit(Enemy enemy, int index, String heroStatus)
 	{
 		int damage = enemy.Dmg;
-		if(status.equals("defend"))
+		if(heroStatus.contains("defend"))
 			damage /= 2;
 		HeroHealth -= damage;
 		enemies[index].HP = 0;
-		if(HeroStatus.equals(".none"))
+		if(HeroStatus.equals(".none") && !enemy.effect.contains("immunity"))
 			HeroStatus = enemy.effect;
 	}
 	
@@ -739,24 +732,24 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
 				{
 					enemies[i].HP -= powerSet[powerIndex].Dmg;
-					effectStat(powerSet[powerIndex].Effect, enemies[i]);
+					applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
 				}
 			}
 		}
 	}
 	
 	public void doSelf(int mouseX, int mouseY) {
-		boolean statusRead = false;
-		String status = "";
+		boolean powerRead = false;
+		String power = "";
 		for(int i = 0; i < powerSet[powerIndex].Effect.length(); i++)
 		{
 			if(powerSet[powerIndex].Effect.charAt(i) == '.')
-				statusRead = true;
-			else if(statusRead)
-				status = status + powerSet[powerIndex].Effect.charAt(i);
+				powerRead = true;
+			else if(powerRead)
+				power = power + powerSet[powerIndex].Effect.charAt(i);
 		}
 		
-		if(status.equals("mine"))
+		if(power.contains("mine"))
 		{
 			Mine tempMine = new Mine(HeroLocX, HeroLocY);
 			Mine[] tempArray = new Mine[mines.length + 1];
@@ -766,20 +759,22 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			mines = tempArray;
 		}
 		
-		else if(status.equals("tele"))
+		else if(power.contains("tele"))
 		{
 			HeroLocX = mouseX;
 			HeroLocY = mouseY;
 		}
 		
-		else if(status.equals("boost"))
+		else if(power.contains("boost"))
 		{
 			HeroStatus = "30.boost";
 		}
 		
-		else if(status.equals("defend"))
+		else if(power.contains("defend"))
 		{
 			HeroStatus = powerSet[powerIndex].Effect;
+		}else {
+			System.err.println("Unknown Hero Power: " + power);
 		}
 	}
 	
@@ -805,7 +800,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
 				{
 					enemies[i].HP -= powerSet[powerIndex].Dmg;
-					effectStat(powerSet[powerIndex].Effect, enemies[i]);
+					applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
 				}
 			}
 		}
@@ -897,7 +892,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
 								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								effectStat(powerSet[powerIndex].Effect, enemies[i]);
+								applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
 							}
 						}
 						//left
@@ -906,7 +901,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
 								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								effectStat(powerSet[powerIndex].Effect, enemies[i]);
+								applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
 							}
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
@@ -925,7 +920,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
 								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								effectStat(powerSet[powerIndex].Effect, enemies[i]);
+								applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
 							}
 						}
 						//left
@@ -934,7 +929,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
 								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								effectStat(powerSet[powerIndex].Effect, enemies[i]);
+								applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
 							}
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
@@ -974,12 +969,12 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		blasts = tempArray;
 	}
 			
-	public void effectStat(String effect, Enemy enemy)
+	public void applyHeroEffectToEnemy(String effect, Enemy enemy)
 	{
 		if(!enemy.status.equals(".immunity"))
 		{
 			boolean statusRead = true;
-			String status = "";
+			String heroStatus = "";
 			int duration = 0;
 			for(int i = 0; i < effect.length(); i++)
 			{
@@ -988,9 +983,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				else if(statusRead)
 					duration = (duration * 10) + Integer.parseInt(effect.charAt(i) + "");
 				else if(!statusRead)
-					status = status + effect.charAt(i);
+					heroStatus = heroStatus + effect.charAt(i);
 			}
-			if(status.equals("knock"))
+			if(heroStatus.equals("knock"))
 			{
 	
 				double slope = Math.atan((double)(HeroLocY - enemy.locY)/(double)(HeroLocX - enemy.locX));
