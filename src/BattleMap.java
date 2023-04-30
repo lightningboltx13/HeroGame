@@ -26,9 +26,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	Blast blasts[] = new Blast[0];
 	Mine mines[] = new Mine[0];
 	
-	int EnemyCount;
+	int minionCount;
 	int spawnReady = 0;
-	Enemy enemies[] = {new Enemy()};
+	Minion minions[] = {new Minion()};
 	Boss boss;
 	boolean Bright = false;
 	
@@ -39,7 +39,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	{
 		for(int i = 0; i < completed.length; i++)
 			if(completed[i])
-				EnemyCount += 10;
+				minionCount += 10;
 		
 		powerSet = powers;
 		mode = GameMode;
@@ -96,15 +96,15 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			{
 				thenIStartedBlasting();
 			}
-			//enemy spawn
+			//minion spawn
 			if(!boss.fighting)
 			{
-				spawnEnemy();
+				spawnMinions();
 			}
 			
 			
-			//enemy move, status updater
-			moveEnemy(heroStatus);
+			//minion move, status updater
+			moveMinions(heroStatus);
 			
 			
 			//attack with mines
@@ -332,9 +332,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		return speed;
 	}
 	
-	public void spawnEnemy() {
-		Enemy[] tempArray = enemies;
-		Enemy[] tempArray2;
+	public void spawnMinions() {
+		Minion[] tempArray = minions;
+		Minion[] tempArray2;
 		int lifeCount = 0;
 		
 		try
@@ -344,10 +344,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					lifeCount++;
 		}catch (NullPointerException ex){}
 		
-		if(EnemyCount > 0)
-			tempArray2 = new Enemy[lifeCount + 1];
+		if(minionCount > 0)
+			tempArray2 = new Minion[lifeCount + 1];
 		else
-			tempArray2 = new Enemy[lifeCount];
+			tempArray2 = new Minion[lifeCount];
 		
 		try{
 			int count = 0;
@@ -359,13 +359,13 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				}
 		}catch (NullPointerException ex){}
 		
-		if(EnemyCount > 0)
+		if(minionCount > 0)
 		{
 			if(spawnReady == 10)
 			{
-				EnemyCount--;
-				Enemy tempEnemy = new Enemy();
-				tempArray2[tempArray2.length - 1] = tempEnemy;
+				minionCount--;
+				Minion tempMinion = new Minion();
+				tempArray2[tempArray2.length - 1] = tempMinion;
 				spawnReady -= 10;
 			}
 			else
@@ -373,67 +373,67 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				spawnReady++;
 			}
 		}
-		enemies = tempArray2;
-		if(enemies.length == 0)
+		minions = tempArray2;
+		if(minions.length == 0)
 			boss.fighting = true;
 	}
 	
-	public void moveEnemy(String status) {
+	public void moveMinions(String status) {
 		try{
-			for(int i = 0; i < enemies.length; i++)
+			for(int i = 0; i < minions.length; i++)
 			{
 				boolean EstatusRead = true;
 				String Estatus = "";
 				int Eduration = 0;
-				for(int a = 0; a < enemies[i].status.length(); a++)
+				for(int a = 0; a < minions[i].status.length(); a++)
 				{
-					if(enemies[i].status.charAt(a) == '.')
+					if(minions[i].status.charAt(a) == '.')
 						EstatusRead = false;
 					else if(EstatusRead)
-						Eduration = (Eduration * 10) + Integer.parseInt(enemies[i].status.charAt(a) + "");
+						Eduration = (Eduration * 10) + Integer.parseInt(minions[i].status.charAt(a) + "");
 					else if(!EstatusRead)
-						Estatus = Estatus + enemies[i].status.charAt(a);
+						Estatus = Estatus + minions[i].status.charAt(a);
 				}
 				
-				double enemySpeed = enemies[i].Spd;
+				double minionSpeed = minions[i].Spd;
 				if(Estatus.contains("slow"))
-					enemySpeed /= 2;
+					minionSpeed /= 2;
 				if(Estatus.contains("stun"))
-					enemySpeed = 0;
+					minionSpeed = 0;
 				if(Estatus.contains("hurt"))
-					enemies[i].HP--;
+					minions[i].HP--;
 				if(!Estatus.contains("none") && !Estatus.contains("immunity"))
 				{
 					Eduration--;
 					if(Eduration == 0)
-						enemies[i].status = ".none";
+						minions[i].status = ".none";
 					else
-						enemies[i].status = Eduration + "." + Estatus;
+						minions[i].status = Eduration + "." + Estatus;
 				}
-				if(enemies[i].locX == HeroLocX)
+				if(minions[i].locX == HeroLocX)
 				{
-					if(enemies[i].locY > HeroLocY)
-						enemies[i].locY -= enemySpeed;
-					else if(enemies[i].locY < HeroLocY)
-						enemies[i].locY += enemySpeed;
-					enemies[i].locX++;
+					if(minions[i].locY > HeroLocY)
+						minions[i].locY -= minionSpeed;
+					else if(minions[i].locY < HeroLocY)
+						minions[i].locY += minionSpeed;
+					minions[i].locX++;
 				}
 				else
 				{
 					int dir = 1;
-					if(enemies[i].locX > HeroLocX)
+					if(minions[i].locX > HeroLocX)
 						dir = -1;
-					enemies[i].locX = (int)(enemies[i].locX + dir*(Math.cos(enemies[i].slope)*enemySpeed));
-					enemies[i].locY = (int)(enemies[i].locY + dir*(Math.sin(enemies[i].slope)*enemySpeed));
+					minions[i].locX = (int)(minions[i].locX + dir*(Math.cos(minions[i].slope)*minionSpeed));
+					minions[i].locY = (int)(minions[i].locY + dir*(Math.sin(minions[i].slope)*minionSpeed));
 				}
 				
 				double temp1, temp2;
-				temp1 = Math.pow(enemies[i].locX - HeroLocX,2);
-				temp2 = Math.pow(enemies[i].locY - HeroLocY,2);
+				temp1 = Math.pow(minions[i].locX - HeroLocX,2);
+				temp2 = Math.pow(minions[i].locY - HeroLocY,2);
 				if(Math.sqrt(temp1 + temp2) <= 10)
-					enemyHit(enemies[i], i, status);
+					minionHit(minions[i], i, status);
 				
-				enemies[i].enemyDraw(getGraphics(), HeroLocX, HeroLocY, enemies[i]);
+				minions[i].draw(getGraphics(), HeroLocX, HeroLocY, minions[i]);
 			}
 		}catch (NullPointerException ex){}
 	}
@@ -474,14 +474,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				}
 				else
 				{
-					for(int a = 0; a < enemies.length; a++)
+					for(int a = 0; a < minions.length; a++)
 					{
-						double blastDis = Math.sqrt(Math.pow(enemies[a].locX - blasts[i].LocX, 2) + Math.pow(enemies[a].locY - blasts[i].LocY, 2));
+						double blastDis = Math.sqrt(Math.pow(minions[a].locX - blasts[i].LocX, 2) + Math.pow(minions[a].locY - blasts[i].LocY, 2));
 						if(blastDis <= 5)
 						{
 							blasts[i].hit = true;
-							enemies[a].HP -= blasts[i].Dmg;
-							applyHeroEffectToEnemy(blasts[i].effect, enemies[a]);
+							minions[a].HP -= blasts[i].Dmg;
+							applyHeroEffectToMinion(blasts[i].effect, minions[a]);
 						}
 					}
 				}
@@ -530,17 +530,17 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			
 			if(!boss.fighting)
 			{
-				for(int i = 0; i < enemies.length; i++)
+				for(int i = 0; i < minions.length; i++)
 				{
 					try{
 						for(int m = 0; m < mines.length; m++)
 						{
 							//enemies is null!!!
-							mine1 = Math.pow(enemies[i].locX - mines[m].locX, 2);
-							mine2 = Math.pow(enemies[i].locY - mines[m].locY, 2);
+							mine1 = Math.pow(minions[i].locX - mines[m].locX, 2);
+							mine2 = Math.pow(minions[i].locY - mines[m].locY, 2);
 							if(Math.sqrt(mine1 + mine2) <= 10)
 							{
-								enemies[i].HP -= 10;
+								minions[i].HP -= 10;
 								mines[m].exploded = true;
 							}
 							else
@@ -596,15 +596,15 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		this.hide();
 	}
 	
-	public void enemyHit(Enemy enemy, int index, String heroStatus)
+	public void minionHit(Minion minion, int index, String heroStatus)
 	{
-		int damage = enemy.Dmg;
+		int damage = minion.Dmg;
 		if(heroStatus.contains("defend"))
 			damage /= 2;
 		HeroHealth -= damage;
-		enemies[index].HP = 0;
-		if(HeroStatus.equals(".none") && !enemy.effect.contains("immunity"))
-			HeroStatus = enemy.effect;
+		minions[index].HP = 0;
+		if(HeroStatus.equals(".none") && !minion.effect.contains("immunity"))
+			HeroStatus = minion.effect;
 	}
 	
 	public void keyPressed(KeyEvent e)
@@ -725,14 +725,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		}
 		else
 		{
-			for(int i = 0; i < enemies.length; i++)
+			for(int i = 0; i < minions.length; i++)
 			{
-				temp1 = Math.pow(enemies[i].locX - fistX,  2);
-				temp2 = Math.pow(enemies[i].locY - fistY,  2);
+				temp1 = Math.pow(minions[i].locX - fistX,  2);
+				temp2 = Math.pow(minions[i].locY - fistY,  2);
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
 				{
-					enemies[i].HP -= powerSet[powerIndex].Dmg;
-					applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
+					minions[i].HP -= powerSet[powerIndex].Dmg;
+					applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 				}
 			}
 		}
@@ -793,14 +793,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		}
 		else
 		{
-			for(int i = 0; i < enemies.length; i++)
+			for(int i = 0; i < minions.length; i++)
 			{
-				temp1 = Math.pow(enemies[i].locX - HeroLocX,  2);
-				temp2 = Math.pow(enemies[i].locY - HeroLocY,  2);
+				temp1 = Math.pow(minions[i].locX - HeroLocX,  2);
+				temp2 = Math.pow(minions[i].locY - HeroLocY,  2);
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
 				{
-					enemies[i].HP -= powerSet[powerIndex].Dmg;
-					applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
+					minions[i].HP -= powerSet[powerIndex].Dmg;
+					applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 				}
 			}
 		}
@@ -875,24 +875,24 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		if(!boss.fighting)
 		{
 			double Eslope1, Eslope2, distance;
-			for(int i = 0; i < enemies.length; i++)
+			for(int i = 0; i < minions.length; i++)
 			{
-				distance = Math.sqrt(Math.pow(enemies[i].locY - HeroLocY, 2) + Math.pow(enemies[i].locX - HeroLocX, 2));
+				distance = Math.sqrt(Math.pow(minions[i].locY - HeroLocY, 2) + Math.pow(minions[i].locX - HeroLocX, 2));
 				
 				if(distance <= powerSet[powerIndex].Range*100)
 				{
 					if(mouseY > HeroLocY)
 					{
-						Eslope1 = Math.atan(((double)enemies[i].yPoints[1] - HeroLocY)/((double)enemies[i].xPoints[1] - HeroLocX));
-						Eslope2 = Math.atan(((double)enemies[i].yPoints[2] - HeroLocY)/((double)enemies[i].xPoints[2] - HeroLocX));
+						Eslope1 = Math.atan(((double)minions[i].yPoints[1] - HeroLocY)/((double)minions[i].xPoints[1] - HeroLocX));
+						Eslope2 = Math.atan(((double)minions[i].yPoints[2] - HeroLocY)/((double)minions[i].xPoints[2] - HeroLocX));
 						
 						//right
-						if(mouseX > HeroLocX && enemies[i].locX > HeroLocX)
+						if(mouseX > HeroLocX && minions[i].locX > HeroLocX)
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
-								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
+								minions[i].HP -= powerSet[powerIndex].Dmg;
+								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 							}
 						}
 						//left
@@ -900,8 +900,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
-								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
+								minions[i].HP -= powerSet[powerIndex].Dmg;
+								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 							}
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
@@ -911,25 +911,25 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					}
 					else
 					{
-						Eslope1 = Math.atan((HeroLocY - (double)enemies[i].yPoints[1])/(HeroLocX - (double)enemies[i].xPoints[1]));
-						Eslope2 = Math.atan((HeroLocY - (double)enemies[i].yPoints[2])/(HeroLocX - (double)enemies[i].xPoints[2]));
+						Eslope1 = Math.atan((HeroLocY - (double)minions[i].yPoints[1])/(HeroLocX - (double)minions[i].xPoints[1]));
+						Eslope2 = Math.atan((HeroLocY - (double)minions[i].yPoints[2])/(HeroLocX - (double)minions[i].xPoints[2]));
 						
 						//right
-						if(mouseX > HeroLocX && enemies[i].locX > HeroLocX)
+						if(mouseX > HeroLocX && minions[i].locX > HeroLocX)
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
-								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
+								minions[i].HP -= powerSet[powerIndex].Dmg;
+								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 							}
 						}
 						//left
-						else if(mouseX < HeroLocX && enemies[i].locX < HeroLocX)
+						else if(mouseX < HeroLocX && minions[i].locX < HeroLocX)
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
-								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								applyHeroEffectToEnemy(powerSet[powerIndex].Effect, enemies[i]);
+								minions[i].HP -= powerSet[powerIndex].Dmg;
+								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
 							}
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
@@ -969,9 +969,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		blasts = tempArray;
 	}
 			
-	public void applyHeroEffectToEnemy(String effect, Enemy enemy)
+	public void applyHeroEffectToMinion(String effect, Minion minion)
 	{
-		if(!enemy.status.equals(".immunity"))
+		if(!minion.status.equals(".immunity"))
 		{
 			boolean statusRead = true;
 			String heroStatus = "";
@@ -988,28 +988,28 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			if(heroStatus.equals("knock"))
 			{
 	
-				double slope = Math.atan((double)(HeroLocY - enemy.locY)/(double)(HeroLocX - enemy.locX));
-				if(enemy.locX > HeroLocX)
+				double slope = Math.atan((double)(HeroLocY - minion.locY)/(double)(HeroLocX - minion.locX));
+				if(minion.locX > HeroLocX)
 				{
-					enemy.locX += Math.cos(slope)*duration;
-					enemy.locY += Math.sin(slope)*duration;
+					minion.locX += Math.cos(slope)*duration;
+					minion.locY += Math.sin(slope)*duration;
 				}
-				if(enemy.locX < HeroLocX)
+				if(minion.locX < HeroLocX)
 				{
-					enemy.locX -= Math.cos(slope)*duration;
-					enemy.locY -= Math.sin(slope)*duration;
+					minion.locX -= Math.cos(slope)*duration;
+					minion.locY -= Math.sin(slope)*duration;
 				}
-				if(enemy.locX == HeroLocX)
+				if(minion.locX == HeroLocX)
 				{
-					if(enemy.locY > HeroLocY)
-						enemy.locY += Math.sin(slope)*duration;
+					if(minion.locY > HeroLocY)
+						minion.locY += Math.sin(slope)*duration;
 					else
-						enemy.locY -= Math.sin(slope)*duration;
+						minion.locY -= Math.sin(slope)*duration;
 				}
 			}
 			else
 			{
-				enemy.status = effect;
+				minion.status = effect;
 			}
 		}
 	}

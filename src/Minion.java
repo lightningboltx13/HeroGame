@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.Random;
 
-public class Enemy 
+public class Minion 
 {
 	int HP, Spd, Dmg;
 	int locX, locY;
@@ -15,7 +15,7 @@ public class Enemy
 	
 	Random rand = new Random();
 	
-	public Enemy()
+	public Minion()
 	{
 		int temp = rand.nextInt(4);
 		
@@ -80,18 +80,18 @@ public class Enemy
 		}
 	}
 	
-	public void enemyDraw(Graphics g, int heroX, int heroY, Enemy enemy)
+	public void draw(Graphics g, int heroX, int heroY, Minion minion)
 	{
-		xPoints[0] = enemy.locX;
-		yPoints[0] = enemy.locY;
+		xPoints[0] = minion.locX;
+		yPoints[0] = minion.locY;
 		
-		if(enemy.locX == heroX)
+		if(minion.locX == heroX)
 		{
-			if(enemy.length == 0)
+			if(minion.length == 0)
 			{
 				xPoints[1] = (int)locX+7;
 				xPoints[2] = (int)locX-7;
-				if(enemy.locY > heroY)
+				if(minion.locY > heroY)
 				{
 					yPoints[1] = (int)locY+7;
 					yPoints[2] = (int)locY+7;
@@ -104,29 +104,29 @@ public class Enemy
 			}
 			else
 			{
-				xPoints[1] = (int)((1/enemy.length)*15)+locX;
-				xPoints[2] = locX - (int)((1/enemy.length)*15);
-				if(enemy.locY > heroY)
+				xPoints[1] = (int)((1/minion.length)*15)+locX;
+				xPoints[2] = locX - (int)((1/minion.length)*15);
+				if(minion.locY > heroY)
 				{
-					yPoints[1] = (int)(enemy.length*15)+locY;
-					yPoints[2] = (int)(enemy.length*15)+locY;
+					yPoints[1] = (int)(minion.length*15)+locY;
+					yPoints[2] = (int)(minion.length*15)+locY;
 				}
 				else
 				{
-					yPoints[1] =  locY - (int)((enemy.length)*15);
-					yPoints[2] =  locY - (int)((enemy.length)*15);
+					yPoints[1] =  locY - (int)((minion.length)*15);
+					yPoints[2] =  locY - (int)((minion.length)*15);
 				}
 			}
 		}
 		else
 		{
-			slope = Math.atan((double)(heroY- enemy.locY)/(heroX - enemy.locX));
-			wingSlope = Math.atan((double)-(heroX- enemy.locX)/(heroY - enemy.locY));
+			slope = Math.atan((double)(heroY- minion.locY)/(heroX - minion.locX));
+			wingSlope = Math.atan((double)-(heroX- minion.locX)/(heroY - minion.locY));
 			
 			int dir = 1;
-			if(enemy.locX < heroX)
+			if(minion.locX < heroX)
 				dir = -1;
-			if(enemy.length == 0)
+			if(minion.length == 0)
 			{
 				xPoints[1] = (int)((dir*Math.cos(slope)*7) + (int)(dir*Math.cos(wingSlope)*7))+locX;
 				xPoints[2] = (int)((dir*Math.cos(slope)*7) - (int)(dir*Math.cos(wingSlope)*7))+locX;
@@ -135,15 +135,15 @@ public class Enemy
 			}
 			else
 			{
-				xPoints[1] = (int)((dir*Math.cos(slope)*enemy.length*15) + (int)(dir*Math.cos(wingSlope)*(1/enemy.length)*15))+locX;
-				xPoints[2] = (int)((dir*Math.cos(slope)*enemy.length*15) - (int)(dir*Math.cos(wingSlope)*(1/enemy.length)*15))+locX;
-				yPoints[1] = (int)((dir*Math.sin(slope)*enemy.length*15) + (int)(dir*Math.sin(wingSlope)*(1/enemy.length)*15))+locY;
-				yPoints[2] = (int)((dir*Math.sin(slope)*enemy.length*15) - (int)(dir*Math.sin(wingSlope)*(1/enemy.length)*15))+locY;
+				xPoints[1] = (int)((dir*Math.cos(slope)*minion.length*15) + (int)(dir*Math.cos(wingSlope)*(1/minion.length)*15))+locX;
+				xPoints[2] = (int)((dir*Math.cos(slope)*minion.length*15) - (int)(dir*Math.cos(wingSlope)*(1/minion.length)*15))+locX;
+				yPoints[1] = (int)((dir*Math.sin(slope)*minion.length*15) + (int)(dir*Math.sin(wingSlope)*(1/minion.length)*15))+locY;
+				yPoints[2] = (int)((dir*Math.sin(slope)*minion.length*15) - (int)(dir*Math.sin(wingSlope)*(1/minion.length)*15))+locY;
 			}
 		}
-		g.setColor(enemy.color);
+		g.setColor(minion.color);
 		
-		if(enemy.HP == 1)
+		if(minion.HP == 1)
 			g.setColor(Color.white);
 		g.fillPolygon(xPoints, yPoints, 3);
 	}
