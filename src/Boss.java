@@ -185,6 +185,14 @@ public class Boss implements Enemy
 	public String getStatus() {
 		return this.status;
 	}
+	@Override
+	public String getStatusText() {
+		int index = this.status.indexOf(".");
+		if(index > 0){
+		return this.status.substring(index  + 1, this.status.length());
+		}
+		return this.status;
+	}
 
 	@Override
 	public void setEffect(String effect) {
@@ -194,6 +202,15 @@ public class Boss implements Enemy
 	@Override
 	public String getEffect() {
 		return this.effect;
+	}
+	
+	@Override
+	public int getDuration() {
+		int index = this.status.indexOf(".");
+		if(index > 0){
+			return Integer.parseInt(this.status.substring(0, index));
+		}
+		return 0;
 	}
 
 	@Override

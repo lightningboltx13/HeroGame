@@ -212,20 +212,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				}
 				
 				//boss status
-				statusRead = true;
-				String bossStatus = "";
-				duration = 0;
-				//System.out.println("Boss Status: " + boss.getStatus());
-				for(int i = 0; i < boss.getStatus().length(); i++)
-				{
-					char bossStatusCharacter = boss.getStatus().charAt(i);
-					if(bossStatusCharacter == '.')
-						statusRead = false;
-					else if(statusRead)
-						duration = (duration * 10) + Integer.parseInt(bossStatusCharacter + "");
-					else if(!statusRead)
-						bossStatus = bossStatus + bossStatusCharacter;
-				}
+				String bossStatus = boss.getStatusText();
+				duration = boss.getDuration();
+				
 				
 				if(duration > 0)
 				{
@@ -383,19 +372,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		try{
 			for(int i = 0; i < minions.length; i++)
 			{
-				boolean EstatusRead = true;
-				String Estatus = "";
-				int Eduration = 0;
-				for(int a = 0; a < minions[i].getStatus().length(); a++)
-				{
-					char minionStatusCharacter = minions[i].getStatus().charAt(a);
-					if(minionStatusCharacter== '.')
-						EstatusRead = false;
-					else if(EstatusRead)
-						Eduration = (Eduration * 10) + Integer.parseInt(minionStatusCharacter + "");
-					else if(!EstatusRead)
-						Estatus = Estatus + minionStatusCharacter;
-				}
+				String Estatus = minions[i].getStatusText();
+				int Eduration = minions[i].getDuration();
 				
 				double minionSpeed = minions[i].getSpeed();
 				if(Estatus.contains("slow"))

@@ -28,9 +28,12 @@ public interface Enemy {
 	
 	public void setStatus(String status);
 	public String getStatus();
+	public String getStatusText();
 	
 	public void setEffect(String effect);
 	public String getEffect();
+	
+	public int getDuration();
 	
 	public String toString();
 

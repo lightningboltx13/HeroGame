@@ -24,7 +24,6 @@ public class Minion implements Enemy
 	private String world = "";
 	
 	double slope;
-	double wingSlope;
 	
 	int[] xPoints = new int[3];
 	int[] yPoints = new int[3];
@@ -130,8 +129,8 @@ public class Minion implements Enemy
 		}
 		else
 		{
-			slope = Math.atan((double)(heroY- minion.locationY)/(heroX - minion.locationX));
-			wingSlope = Math.atan((double)-(heroX- minion.locationX)/(heroY - minion.locationY));
+			double slope = Math.atan((double)(heroY- minion.locationY)/(heroX - minion.locationX));
+			double wingSlope = Math.atan((double)-(heroX- minion.locationX)/(heroY - minion.locationY));
 			
 			int dir = 1;
 			if(minion.locationX < heroX)
@@ -230,6 +229,15 @@ public class Minion implements Enemy
 	}
 	
 	@Override
+	public String getStatusText() {
+		int index = this.status.indexOf(".");
+		if(index > 0){
+		return this.status.substring(index  + 1, this.status.length());
+		}
+		return this.status;
+	}
+	
+	@Override
 	public void setEffect(String effect) {
 		this.effect = effect;
 	}
@@ -240,12 +248,21 @@ public class Minion implements Enemy
 	}
 	
 	@Override
+	public int getDuration() {
+		int index = this.status.indexOf(".");
+		if(index > 0){
+			return Integer.parseInt(this.status.substring(0, index));
+		}
+		return 0;
+	}
+	@Override
 	public String toString() {
 		return "Minion [health=" + health + ", speed=" + speed + ", damage=" + damage + ", maxHealth=" + maxHealth
 				+ ", locationX=" + locationX + ", locationY=" + locationY + ", length=" + length + ", color=" + color
 				+ ", effect=" + effect + ", status=" + status + ", name=" + name + ", world=" + world + ", slope="
-				+ slope + ", wingSlope=" + wingSlope + ", xPoints=" + Arrays.toString(xPoints) + ", yPoints="
+				+ slope + ", xPoints=" + Arrays.toString(xPoints) + ", yPoints="
 				+ Arrays.toString(yPoints) + "]";
 	}
+	
 	
 }
