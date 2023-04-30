@@ -25,6 +25,7 @@ public class Minion implements Enemy
 	
 	double slope;
 	
+	//TODO: Change to double
 	int[] xPoints = new int[3];
 	int[] yPoints = new int[3];
 	
@@ -154,6 +155,7 @@ public class Minion implements Enemy
 		
 		if(minion.health == 1)
 			g.setColor(Color.white);
+		//TODO: Once you change to double then do casting to int's because fillPolygon(int[],int[],int)
 		g.fillPolygon(xPoints, yPoints, 3);
 	}
 	@Override

@@ -54,20 +54,20 @@ public class Boss implements Enemy
 	
 	public void draw(Graphics g, int heroX, int heroY, Boss boss)
 	{
-		double slope = Math.atan((double)(heroY - boss.locationY)/(heroX - boss.locationX));
-		double wingSlope = Math.atan((double)-(heroX - boss.locationX)/(heroY - boss.locationY));
+		double slope = Math.atan((double)(heroY - boss.getLocationY())/(heroX - boss.getLocationX()));
+		double wingSlope = Math.atan((double)-(heroX - boss.getLocationX())/(heroY - boss.getLocationY()));
 
-		xPoints[0] = boss.locationX;
-		yPoints[0] = boss.locationY;
+		xPoints[0] = boss.getLocationX();
+		yPoints[0] = boss.getLocationY();
 		
-		xPoints[1] = boss.locationX + (Math.cos(slope)*40) + (Math.cos(wingSlope)*25);
-		yPoints[1] = boss.locationY + (Math.sin(slope)*40) + (Math.sin(wingSlope)*25);
+		xPoints[1] = boss.getLocationX() + (Math.cos(slope)*40) + (Math.cos(wingSlope)*25);
+		yPoints[1] = boss.getLocationY() + (Math.sin(slope)*40) + (Math.sin(wingSlope)*25);
 		
-		xPoints[2] = boss.locationX + Math.cos(slope)*25;
-		yPoints[2] = boss.locationY + Math.sin(slope)*25;
+		xPoints[2] = boss.getLocationX() + Math.cos(slope)*25;
+		yPoints[2] = boss.getLocationY() + Math.sin(slope)*25;
 		
-		xPoints[3] = boss.locationX + (Math.cos(slope)*40 - Math.cos(wingSlope)*25);
-		yPoints[3] = boss.locationY + (Math.sin(slope)*40 - Math.sin(wingSlope)*25);
+		xPoints[3] = boss.getLocationX() + (Math.cos(slope)*40 - Math.cos(wingSlope)*25);
+		yPoints[3] = boss.getLocationY() + (Math.sin(slope)*40 - Math.sin(wingSlope)*25);
 
 
 		int[] drawPointsX = new int[4];
@@ -75,12 +75,12 @@ public class Boss implements Enemy
 		
 		for(int i = 0; i < 4; i++)
 		{
-			if(boss.locationX < heroX)
+			if(boss.getLocationX() < heroX)
 			{
 				xPoints[i] *= -1;
-				xPoints[i] += 2*boss.locationX;
+				xPoints[i] += 2*boss.getLocationX();
 				yPoints[i] *= -1;
-				yPoints[i] += 2*boss.locationY;
+				yPoints[i] += 2*boss.getLocationY();
 			}
 			drawPointsX[i] = (int) xPoints[i];
 			drawPointsY[i] = (int) yPoints[i];

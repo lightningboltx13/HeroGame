@@ -14,12 +14,12 @@ public class WorldSelector extends Frame implements ActionListener, MouseListene
 	
 	Button[] wrdBtnArray = new Button[11];
 	
-	TextArea wrdInfo = new TextArea(20,75);
+	private final TextArea wrdInfo = new TextArea(20,75);
 	TextArea bossInfo = new TextArea(20,75);
 	
 	Button backBtn = new Button("Back");
 	
-	Color btnColor[] = 
+	private final Color btnColor[] = 
 	{
 		new Color(0, 250, 255),
 		new Color(0, 0, 255),
