@@ -62,7 +62,6 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			
 			boolean statusRead = true;
 			String heroStatus = "";
-			String bossStatus = "";
 			int duration = 0;
 			for(int i = 0; i < HeroStatus.length(); i++)
 			{
@@ -74,23 +73,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					heroStatus = heroStatus + HeroStatus.charAt(i);
 			}
 			
-			int speed = 5;
-			switch (heroStatus) {
-				case "boost":
-					speed = 10;
-					break;
-				case "slow":
-					speed = 2;
-					break;
-				case "stun":
-					speed = 0;
-					break;
-				case "none":
-					//do nothing---none
-					break;
-				default:
-					System.err.println("Unknown Hero Status in Momvement: " + heroStatus);
-			}
+			
+			int speed = checkHeroStatus(heroStatus);
+			
 			
 			if(up)
 				HeroLocY -= speed;
@@ -160,9 +145,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				}
 				
 				double Bspeed = boss.bossSpd;
-				if(boss.bossStatus.charAt(boss.bossStatus.length()-1) == 'w')//slow
+				if(boss.bossStatus.contains("slow"))//slow
 					Bspeed /= 2;
-				if(boss.bossStatus.charAt(boss.bossStatus.length()-1) == 'n')//stun
+				else if(boss.bossStatus.contains("stun"))//stun
 					Bspeed /= 4;
 				
 
@@ -227,8 +212,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				
 				//boss status
 				statusRead = true;
-				bossStatus = "";
+				String bossStatus = "";
 				duration = 0;
+				System.out.println("Boss Status: " + bossStatus);
 				for(int i = 0; i < boss.bossStatus.length(); i++)
 				{
 					if(boss.bossStatus.charAt(i) == '.')
@@ -335,6 +321,26 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			timer.schedule(new testEvent(), 60);
 //			update(getGraphics());
 		}
+	}
+	public int checkHeroStatus(String heroStatus) {
+		int speed = 5;
+		switch (heroStatus) {
+		case "boost":
+			speed = 10;
+			break;
+		case "slow":
+			speed = 2;
+			break;
+		case "stun":
+			speed = 0;
+			break;
+		case "none":
+			//do nothing---none
+			break;
+		default:
+			System.err.println("Unknown Hero Status in Momvement: " + heroStatus);
+	}
+		return speed;
 	}
 	
 	public void spawnEnemy() {
