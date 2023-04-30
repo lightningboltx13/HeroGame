@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Minion implements Enemy 
@@ -28,63 +29,28 @@ public class Minion implements Enemy
 	int[] xPoints = new int[3];
 	int[] yPoints = new int[3];
 	
-	Random rand = new Random();
+	
 	
 	public Minion()
 	{
+		Random rand = new Random();
 		int temp = rand.nextInt(4);
-		
-//		if(temp == 0)
-//		{
-//			health = 15;
-//			speed = 8;
-//			damage = 7;
-//			length = 2;
-//			effect = "5.slow";
-//			color = Color.blue;
-//		}
-//		if(temp == 1)
-//		{
-//			health = 20;
-//			speed = 5;
-//			damage = 10;
-//			length = 1;
-//			effect = "5.hurt";
-//			color = Color.red;
-//		}
-//		if(temp == 2)
-//		{
-//			health = 30;
-//			speed = 3;
-//			damage = 7;
-//			length = .5;
-//			effect = "5.stun";
-//			color = Color.yellow;
-//		}
-//		if(temp == 3)
-//		{
-//			health = 15;
-//			speed = 5;
-//			damage = 5;
-//			length = 0;
-//			effect = ".immunity";
-//			color = Color.green;
-//		}
+	
 		switch(temp) {
 			case 0:
-				this.initialize("minion-" + temp, "", 15, 7, 8, "5.slow", Color.blue);
+				this.initialize("BLUE-MINION", "WORLD", 15, 7, 8, "5.slow", Color.blue);
 				length = 2;
 				break;
-			case 1:
-				this.initialize("minion-" + temp, "", 20, 10, 5, "5.hurt", Color.red);
+			case 1:	
+				this.initialize("RED-MINION", "WORLD", 20, 10, 5, "5.hurt", Color.red);
 				length = 1;
 				break;
 			case 2:
-				this.initialize("minion-" + temp, "", 30, 7, 3, "5.stun", Color.yellow);
+				this.initialize("YELLOW-MINION", "WORLD", 30, 7, 3, "5.stun", Color.yellow);
 				length = .5;
 				break;
 			case 3:
-				this.initialize("minion-" + temp, "", 15, 5, 5, ".immunity", Color.green);
+				this.initialize("GREEN-MINION", "WORLD", 15, 5, 5, ".immunity", Color.green);
 				length = 0;
 				break;
 		}
@@ -104,15 +70,16 @@ public class Minion implements Enemy
 			case 3:
 				this.setLocation(rand.nextInt(1280), 960);
 				break;
-		}
+		}		
 	}
 	@Override
 	public void initialize(String name, String world, int health, int damage, int speed, String effect, Color color) {
-		this.name = name;
-		this.world = world;
+		//this.name = name;
+		//this.world = world;
 		this.health = health;
 		this.maxHealth = health;
 		this.damage = damage;
+		this.speed = speed;
 		this.effect = effect;
 		this.color = color;
 	}
@@ -271,4 +238,14 @@ public class Minion implements Enemy
 	public String getEffect() {
 		return this.effect;
 	}
+	
+	@Override
+	public String toString() {
+		return "Minion [health=" + health + ", speed=" + speed + ", damage=" + damage + ", maxHealth=" + maxHealth
+				+ ", locationX=" + locationX + ", locationY=" + locationY + ", length=" + length + ", color=" + color
+				+ ", effect=" + effect + ", status=" + status + ", name=" + name + ", world=" + world + ", slope="
+				+ slope + ", wingSlope=" + wingSlope + ", xPoints=" + Arrays.toString(xPoints) + ", yPoints="
+				+ Arrays.toString(yPoints) + "]";
+	}
+	
 }

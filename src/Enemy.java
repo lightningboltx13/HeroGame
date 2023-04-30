@@ -31,7 +31,8 @@ public interface Enemy {
 	
 	public void setEffect(String effect);
 	public String getEffect();
-
+	
+	public String toString();
 
 	//public void draw(Graphics g, int heroX, int heroY, Enemy enemy);
 		

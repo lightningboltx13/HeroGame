@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.Arrays;
 
 public class Boss implements Enemy
 {
@@ -194,5 +195,15 @@ public class Boss implements Enemy
 	public String getEffect() {
 		return this.effect;
 	}
+
+	@Override
+	public String toString() {
+		return "Boss [health=" + health + ", speed=" + speed + ", damage=" + damage + ", maxHealth=" + maxHealth
+				+ ", locationX=" + locationX + ", locationY=" + locationY + ", attack=" + attack + ", moveCount="
+				+ moveCount + ", tempSlope=" + tempSlope + ", name=" + name + ", effect=" + effect + ", status="
+				+ status + ", world=" + world + ", color=" + color + ", fighting=" + fighting + ", xPoints="
+				+ Arrays.toString(xPoints) + ", yPoints=" + Arrays.toString(yPoints) + "]";
+	}
+	
 	
 }

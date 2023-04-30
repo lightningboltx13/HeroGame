@@ -215,7 +215,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				statusRead = true;
 				String bossStatus = "";
 				duration = 0;
-				System.out.println("Boss Status: " + boss.getStatus());
+				//System.out.println("Boss Status: " + boss.getStatus());
 				for(int i = 0; i < boss.getStatus().length(); i++)
 				{
 					char bossStatusCharacter = boss.getStatus().charAt(i);
