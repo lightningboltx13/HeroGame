@@ -392,8 +392,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					Bspeed /= 4;
 				
 
-				System.out.println(Bright);
-				System.out.println(boss.moveCount);
+				//System.out.println(Bright);
+				//System.out.println(boss.moveCount);
 				if(Bright)
 				{
 					boss.bossLocY += Math.sin(boss.tempSlope)*Bspeed;
@@ -485,6 +485,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			if(regen == 10)
 			{
 				HeroEnergy++;
+				//HeroEnergy+=100;
 				regen = 0;
 			}
 			
@@ -585,18 +586,18 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		//Movement
 		if(key == KeyEvent.VK_W)
 			up = true;
-		if(key == KeyEvent.VK_A)
+		else if(key == KeyEvent.VK_A)
 			left = true;
-		if(key == KeyEvent.VK_S)
+		else if(key == KeyEvent.VK_S)
 			down= true;
-		if(key == KeyEvent.VK_D)
+		else if(key == KeyEvent.VK_D)
 			right = true;
 
 		if(key == KeyEvent.VK_1)//Power Switch
 			powerIndex = 0;
-		if(key == KeyEvent.VK_2)//Power Switch
+		else if(key == KeyEvent.VK_2)//Power Switch
 			powerIndex = 1;
-		if(key == KeyEvent.VK_3)//Power Switch
+		else if(key == KeyEvent.VK_3)//Power Switch
 			powerIndex = 2;
 
 		if(key == KeyEvent.VK_P)//Pause
@@ -617,11 +618,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		//Movement
 		if(key == KeyEvent.VK_W)
 			up = false;
-		if(key == KeyEvent.VK_A)
+		else if(key == KeyEvent.VK_A)
 			left = false;
-		if(key == KeyEvent.VK_S)
+		else if(key == KeyEvent.VK_S)
 			down= false;
-		if(key == KeyEvent.VK_D)
+		else if(key == KeyEvent.VK_D)
 			right = false;
 	}
 	
@@ -633,275 +634,309 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				HeroPosition = true;
 				HeroEnergy -= powerSet[powerIndex].Cost;
 				
-				if(powerSet[powerIndex].Shape.equals("beam"))
-				{
-					double slope = drawer.drawBeam(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
-					
-					if(boss.fighting)
-					{
-						double Eslope1, Eslope2, distance;
-						distance = Math.sqrt(Math.pow(boss.bossLocY - HeroLocY, 2) + Math.pow(boss.bossLocX - HeroLocX, 2));
-						
-						if(distance <= powerSet[powerIndex].Range*100)
-						{
-							if(e.getY() > HeroLocY)
-							{
-								Eslope1 = Math.atan(((double)boss.yPoints[1] - HeroLocY)/((double)boss.xPoints[1] - HeroLocX));
-								Eslope2 = Math.atan(((double)boss.yPoints[3] - HeroLocY)/((double)boss.xPoints[3] - HeroLocX));
-								
-								//right
-								if(e.getX() > HeroLocX && boss.bossLocX > HeroLocX)
-								{
-									if(Eslope1 <= slope && Eslope2 >= slope)
-									{
-										boss.bossHealth -= powerSet[powerIndex].Dmg;
-										bossEffectStat(powerSet[powerIndex].Effect, boss);
-									}
-								}
-								//left
-								if(e.getX() < HeroLocX && boss.bossLocX < HeroLocX)
-								{
-									if(Eslope1 >= slope && Eslope2 <= slope)
-									{
-										boss.bossHealth -= powerSet[powerIndex].Dmg;
-										bossEffectStat(powerSet[powerIndex].Effect, boss);
-									}
-								}
-							}
-							else
-							{
-								Eslope1 = Math.atan((HeroLocY - (double)boss.yPoints[1])/(HeroLocX - (double)boss.xPoints[1]));
-								Eslope2 = Math.atan((HeroLocY - (double)boss.yPoints[3])/(HeroLocX - (double)boss.xPoints[3]));
-								
-								//right
-								if(e.getX() > HeroLocX && boss.bossLocX > HeroLocX)
-								{
-									if(Eslope1 >= slope && Eslope2 <= slope)
-									{
-										boss.bossHealth -= powerSet[powerIndex].Dmg;
-										bossEffectStat(powerSet[powerIndex].Effect, boss);
-									}
-								}
-								//left
-								if(e.getX() < HeroLocX && boss.bossLocX < HeroLocX)
-								{
-									if(Eslope1 <= slope && Eslope2 >= slope)
-									{
-										boss.bossHealth -= powerSet[powerIndex].Dmg;
-										bossEffectStat(powerSet[powerIndex].Effect, boss);
-									}
-								}
-							}
-						}
-					}
-					if(!boss.fighting)
-					{
-						double Eslope1, Eslope2, distance;
-						for(int i = 0; i < enemies.length; i++)
-						{
-							distance = Math.sqrt(Math.pow(enemies[i].locY - HeroLocY, 2) + Math.pow(enemies[i].locX - HeroLocX, 2));
-							
-							if(distance <= powerSet[powerIndex].Range*100)
-							{
-								if(e.getY() > HeroLocY)
-								{
-									Eslope1 = Math.atan(((double)enemies[i].yPoints[1] - HeroLocY)/((double)enemies[i].xPoints[1] - HeroLocX));
-									Eslope2 = Math.atan(((double)enemies[i].yPoints[2] - HeroLocY)/((double)enemies[i].xPoints[2] - HeroLocX));
-									
-									//right
-									if(e.getX() > HeroLocX && enemies[i].locX > HeroLocX)
-									{
-										if(Eslope1 <= slope && Eslope2 >= slope)
-										{
-											enemies[i].HP -= powerSet[powerIndex].Dmg;
-											effectStat(powerSet[powerIndex].Effect, enemies[i]);
-										}
-									}
-									//left
-									if(e.getX() < HeroLocX && boss.bossLocX < HeroLocX)
-									{
-										if(Eslope1 >= slope && Eslope2 <= slope)
-										{
-											enemies[i].HP -= powerSet[powerIndex].Dmg;
-											effectStat(powerSet[powerIndex].Effect, enemies[i]);
-										}
-									}
-								}
-								else
-								{
-									Eslope1 = Math.atan((HeroLocY - (double)enemies[i].yPoints[1])/(HeroLocX - (double)enemies[i].xPoints[1]));
-									Eslope2 = Math.atan((HeroLocY - (double)enemies[i].yPoints[2])/(HeroLocX - (double)enemies[i].xPoints[2]));
-									
-									//right
-									if(e.getX() > HeroLocX && enemies[i].locX > HeroLocX)
-									{
-										if(Eslope1 >= slope && Eslope2 <= slope)
-										{
-											enemies[i].HP -= powerSet[powerIndex].Dmg;
-											effectStat(powerSet[powerIndex].Effect, enemies[i]);
-										}
-									}
-									//left
-									if(e.getX() < HeroLocX && enemies[i].locX < HeroLocX)
-									{
-										if(Eslope1 <= slope && Eslope2 >= slope)
-										{
-											enemies[i].HP -= powerSet[powerIndex].Dmg;
-											effectStat(powerSet[powerIndex].Effect, enemies[i]);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				
-				
-				if(powerSet[powerIndex].Shape.equals("blast"))
-				{
-					double slope = Math.atan((double)(e.getY() - HeroLocY)/(double)(e.getX() - HeroLocX));
-					String dir = "";
-					if(e.getLocationOnScreen().getX() > HeroLocX)
-						dir = "right";
-					else if(e.getLocationOnScreen().getX() < HeroLocX)
-						dir = "left";
-					else
-						if(e.getLocationOnScreen().getY() < HeroLocY)
-							dir = "down";
-						else if(e.getLocationOnScreen().getY() > HeroLocY)
-							dir = "up";
-					
-					Blast tempBlast = new Blast(slope, dir, powerSet[powerIndex].Dmg, powerSet[powerIndex].Range, HeroLocX, HeroLocY, powerSet[powerIndex].color, powerSet[powerIndex].Effect);
-					Blast[] tempArray = new Blast[blasts.length + 1];
-					for(int i = 0; i < blasts.length; i++)
-						tempArray[i] = blasts[i];
-					tempArray[blasts.length] = tempBlast;
-					blasts = tempArray;
-				}
-				
-				if(powerSet[powerIndex].Shape.equals("area"))
-				{
-					drawer.drawArea(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
-					double temp1, temp2;
-					if(boss.fighting)
-					{
-						temp1 = Math.pow(boss.bossLocX - HeroLocX,  2);
-						temp2 = Math.pow(boss.bossLocY - HeroLocY,  2);
-						if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
-						{
-							boss.bossHealth -= powerSet[powerIndex].Dmg;
-							bossEffectStat(powerSet[powerIndex].Effect, boss);
-						}
-					}
-					else
-					{
-						for(int i = 0; i < enemies.length; i++)
-						{
-							temp1 = Math.pow(enemies[i].locX - HeroLocX,  2);
-							temp2 = Math.pow(enemies[i].locY - HeroLocY,  2);
-							if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
-							{
-								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								effectStat(powerSet[powerIndex].Effect, enemies[i]);
-							}
-						}
-					}
-				}
-				
-				if(powerSet[powerIndex].Shape.equals("melee"))
-				{
-					drawer.drawMelee(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
-					double slope = Math.atan((double)(e.getY() - HeroLocY)/(double)(e.getX() - HeroLocX));
-					
-					int fistX, fistY;
-					if(e.getX() > HeroLocX)
-					{
-						fistX = HeroLocX + (int)(Math.cos(slope)*25);
-						fistY = HeroLocY + (int)(Math.sin(slope)*25);
-					}
-					else if(e.getX() < HeroLocX)
-					{
-						fistX = HeroLocX - (int)(Math.cos(slope)*25);
-						fistY = HeroLocY - (int)(Math.sin(slope)*25);
-					}
-					else
-						if(e.getY() > HeroLocY)
-						{
-							fistX = HeroLocX;
-							fistY = HeroLocY + 25;
-						}
-						else
-						{
-							fistX = HeroLocX;
-							fistY = HeroLocY - 25;
-						}
-
-					double temp1, temp2;
-					if(boss.fighting)
-					{
-						temp1 = Math.pow(boss.bossLocX - fistX,  2);
-						temp2 = Math.pow(boss.bossLocY - fistY,  2);
-						if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
-						{
-							boss.bossHealth -= powerSet[powerIndex].Dmg;
-							bossEffectStat(powerSet[powerIndex].Effect, boss);
-						}
-					}
-					else
-					{
-						for(int i = 0; i < enemies.length; i++)
-						{
-							temp1 = Math.pow(enemies[i].locX - fistX,  2);
-							temp2 = Math.pow(enemies[i].locY - fistY,  2);
-							if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
-							{
-								enemies[i].HP -= powerSet[powerIndex].Dmg;
-								effectStat(powerSet[powerIndex].Effect, enemies[i]);
-							}
-						}
-					}
-				}
-				
-				if(powerSet[powerIndex].Shape.equals("self"))
-				{
-					boolean statusRead = false;
-					String status = "";
-					for(int i = 0; i < powerSet[powerIndex].Effect.length(); i++)
-					{
-						if(powerSet[powerIndex].Effect.charAt(i) == '.')
-							statusRead = true;
-						else if(statusRead)
-							status = status + powerSet[powerIndex].Effect.charAt(i);
-					}
-					
-					if(status.equals("mine"))
-					{
-						Mine tempMine = new Mine(HeroLocX, HeroLocY);
-						Mine[] tempArray = new Mine[mines.length + 1];
-						for(int i = 0; i < mines.length; i++)
-							tempArray[i] = mines[i];
-						tempArray[mines.length] = tempMine;
-						mines = tempArray;
-					}
-					
-					if(status.equals("tele"))
-					{
-						HeroLocX = (int)e.getLocationOnScreen().getX();
-						HeroLocY = (int)e.getLocationOnScreen().getY();
-					}
-					
-					if(status.equals("boost"))
-					{
-						HeroStatus = "30.boost";
-					}
-					
-					if(status.equals("defend"))
-					{
-						HeroStatus = powerSet[powerIndex].Effect;
-					}
+				switch(powerSet[powerIndex].Shape) {
+				case "beam":
+					this.doBeam((int)e.getLocationOnScreen().getX(), (int)e.getLocationOnScreen().getY());
+					break;
+				case "blast":
+					this.doBlast((int)e.getLocationOnScreen().getX(), (int)e.getLocationOnScreen().getY());
+					break;
+				case "area":
+					this.doArea();
+					break;
+				case "melee":
+					this.doMelee((int)e.getLocationOnScreen().getX(),(int)e.getLocationOnScreen().getY());
+					break;
+				case "self":
+					this.doSelf((int)e.getLocationOnScreen().getX(), (int)e.getLocationOnScreen().getY());
+					break;
+				default:
+					System.err.println("Unknown Power: " + powerSet[powerIndex].Shape);
 				}
 			}
 		}catch(NullPointerException e1){}
+	}
+	
+	public void doMelee(int mouseX, int mouseY) {
+		drawer.drawMelee(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
+		double slope = Math.atan((double)(mouseY - HeroLocY)/(double)(mouseX - HeroLocX));
+		
+		int fistX, fistY;
+		if(mouseX > HeroLocX)
+		{
+			fistX = HeroLocX + (int)(Math.cos(slope)*25);
+			fistY = HeroLocY + (int)(Math.sin(slope)*25);
+		}
+		else if(mouseX< HeroLocX)
+		{
+			fistX = HeroLocX - (int)(Math.cos(slope)*25);
+			fistY = HeroLocY - (int)(Math.sin(slope)*25);
+		}
+		else
+			if(mouseY > HeroLocY)
+			{
+				fistX = HeroLocX;
+				fistY = HeroLocY + 25;
+			}
+			else
+			{
+				fistX = HeroLocX;
+				fistY = HeroLocY - 25;
+			}
+
+		double temp1, temp2;
+		if(boss.fighting)
+		{
+			temp1 = Math.pow(boss.bossLocX - fistX,  2);
+			temp2 = Math.pow(boss.bossLocY - fistY,  2);
+			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
+			{
+				boss.bossHealth -= powerSet[powerIndex].Dmg;
+				bossEffectStat(powerSet[powerIndex].Effect, boss);
+			}
+		}
+		else
+		{
+			for(int i = 0; i < enemies.length; i++)
+			{
+				temp1 = Math.pow(enemies[i].locX - fistX,  2);
+				temp2 = Math.pow(enemies[i].locY - fistY,  2);
+				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
+				{
+					enemies[i].HP -= powerSet[powerIndex].Dmg;
+					effectStat(powerSet[powerIndex].Effect, enemies[i]);
+				}
+			}
+		}
+	}
+	
+	public void doSelf(int mouseX, int mouseY) {
+		boolean statusRead = false;
+		String status = "";
+		for(int i = 0; i < powerSet[powerIndex].Effect.length(); i++)
+		{
+			if(powerSet[powerIndex].Effect.charAt(i) == '.')
+				statusRead = true;
+			else if(statusRead)
+				status = status + powerSet[powerIndex].Effect.charAt(i);
+		}
+		
+		if(status.equals("mine"))
+		{
+			Mine tempMine = new Mine(HeroLocX, HeroLocY);
+			Mine[] tempArray = new Mine[mines.length + 1];
+			for(int i = 0; i < mines.length; i++)
+				tempArray[i] = mines[i];
+			tempArray[mines.length] = tempMine;
+			mines = tempArray;
+		}
+		
+		else if(status.equals("tele"))
+		{
+			HeroLocX = mouseX;
+			HeroLocY = mouseY;
+		}
+		
+		else if(status.equals("boost"))
+		{
+			HeroStatus = "30.boost";
+		}
+		
+		else if(status.equals("defend"))
+		{
+			HeroStatus = powerSet[powerIndex].Effect;
+		}
+	}
+	
+	public void doArea() {
+		drawer.drawArea(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
+		double temp1, temp2;
+		if(boss.fighting)
+		{
+			temp1 = Math.pow(boss.bossLocX - HeroLocX,  2);
+			temp2 = Math.pow(boss.bossLocY - HeroLocY,  2);
+			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
+			{
+				boss.bossHealth -= powerSet[powerIndex].Dmg;
+				bossEffectStat(powerSet[powerIndex].Effect, boss);
+			}
+		}
+		else
+		{
+			for(int i = 0; i < enemies.length; i++)
+			{
+				temp1 = Math.pow(enemies[i].locX - HeroLocX,  2);
+				temp2 = Math.pow(enemies[i].locY - HeroLocY,  2);
+				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
+				{
+					enemies[i].HP -= powerSet[powerIndex].Dmg;
+					effectStat(powerSet[powerIndex].Effect, enemies[i]);
+				}
+			}
+		}
+	}
+	
+	public void doBeam(int mouseX, int mouseY) {
+		double slope = drawer.drawBeam(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
+		
+		if(boss.fighting)
+		{
+			double Eslope1, Eslope2, distance;
+			distance = Math.sqrt(Math.pow(boss.bossLocY - HeroLocY, 2) + Math.pow(boss.bossLocX - HeroLocX, 2));
+			
+			if(distance <= powerSet[powerIndex].Range*100)
+			{
+				if(mouseY > HeroLocY)
+				{
+					Eslope1 = Math.atan(((double)boss.yPoints[1] - HeroLocY)/((double)boss.xPoints[1] - HeroLocX));
+					Eslope2 = Math.atan(((double)boss.yPoints[3] - HeroLocY)/((double)boss.xPoints[3] - HeroLocX));
+					
+					//right
+					if(mouseX > HeroLocX && boss.bossLocX > HeroLocX)
+					{
+						if(Eslope1 <= slope && Eslope2 >= slope)
+						{
+							boss.bossHealth -= powerSet[powerIndex].Dmg;
+							bossEffectStat(powerSet[powerIndex].Effect, boss);
+						}
+					}
+					//left
+					else if(mouseX < HeroLocX && boss.bossLocX < HeroLocX)
+					{
+						if(Eslope1 >= slope && Eslope2 <= slope)
+						{
+							boss.bossHealth -= powerSet[powerIndex].Dmg;
+							bossEffectStat(powerSet[powerIndex].Effect, boss);
+						}
+					}
+					else {
+						System.out.println("[BEAM]- Y+ -BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
+					}
+				}
+				else
+				{
+					Eslope1 = Math.atan((HeroLocY - (double)boss.yPoints[1])/(HeroLocX - (double)boss.xPoints[1]));
+					Eslope2 = Math.atan((HeroLocY - (double)boss.yPoints[3])/(HeroLocX - (double)boss.xPoints[3]));
+					
+					//right
+					if(mouseX> HeroLocX && boss.bossLocX > HeroLocX)
+					{
+						if(Eslope1 >= slope && Eslope2 <= slope)
+						{
+							boss.bossHealth -= powerSet[powerIndex].Dmg;
+							bossEffectStat(powerSet[powerIndex].Effect, boss);
+						}
+					}
+					//left
+					else if(mouseX < HeroLocX && boss.bossLocX < HeroLocX)
+					{
+						if(Eslope1 <= slope && Eslope2 >= slope)
+						{
+							boss.bossHealth -= powerSet[powerIndex].Dmg;
+							bossEffectStat(powerSet[powerIndex].Effect, boss);
+						}
+					}
+					else {
+						System.out.println("[BEAM]- Y- -BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
+					}
+				}
+			}
+		}
+		if(!boss.fighting)
+		{
+			double Eslope1, Eslope2, distance;
+			for(int i = 0; i < enemies.length; i++)
+			{
+				distance = Math.sqrt(Math.pow(enemies[i].locY - HeroLocY, 2) + Math.pow(enemies[i].locX - HeroLocX, 2));
+				
+				if(distance <= powerSet[powerIndex].Range*100)
+				{
+					if(mouseY > HeroLocY)
+					{
+						Eslope1 = Math.atan(((double)enemies[i].yPoints[1] - HeroLocY)/((double)enemies[i].xPoints[1] - HeroLocX));
+						Eslope2 = Math.atan(((double)enemies[i].yPoints[2] - HeroLocY)/((double)enemies[i].xPoints[2] - HeroLocX));
+						
+						//right
+						if(mouseX > HeroLocX && enemies[i].locX > HeroLocX)
+						{
+							if(Eslope1 <= slope && Eslope2 >= slope)
+							{
+								enemies[i].HP -= powerSet[powerIndex].Dmg;
+								effectStat(powerSet[powerIndex].Effect, enemies[i]);
+							}
+						}
+						//left
+						if(mouseX < HeroLocX && boss.bossLocX < HeroLocX)
+						{
+							if(Eslope1 >= slope && Eslope2 <= slope)
+							{
+								enemies[i].HP -= powerSet[powerIndex].Dmg;
+								effectStat(powerSet[powerIndex].Effect, enemies[i]);
+							}
+						}
+						//TODO: what happens when they're equal? can they ever be equal? 
+						else {
+							System.out.println("[BEAM] - Y+ - NOT--BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
+						}
+					}
+					else
+					{
+						Eslope1 = Math.atan((HeroLocY - (double)enemies[i].yPoints[1])/(HeroLocX - (double)enemies[i].xPoints[1]));
+						Eslope2 = Math.atan((HeroLocY - (double)enemies[i].yPoints[2])/(HeroLocX - (double)enemies[i].xPoints[2]));
+						
+						//right
+						if(mouseX > HeroLocX && enemies[i].locX > HeroLocX)
+						{
+							if(Eslope1 >= slope && Eslope2 <= slope)
+							{
+								enemies[i].HP -= powerSet[powerIndex].Dmg;
+								effectStat(powerSet[powerIndex].Effect, enemies[i]);
+							}
+						}
+						//left
+						else if(mouseX < HeroLocX && enemies[i].locX < HeroLocX)
+						{
+							if(Eslope1 <= slope && Eslope2 >= slope)
+							{
+								enemies[i].HP -= powerSet[powerIndex].Dmg;
+								effectStat(powerSet[powerIndex].Effect, enemies[i]);
+							}
+						}
+						//TODO: what happens when they're equal? can they ever be equal? 
+						else {
+							System.out.println("[BEAM] - Y- - NOT--BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void doBlast(int mouseX, int mouseY) {
+		double slope = Math.atan((double)(mouseY - HeroLocY)/(double)(mouseX - HeroLocX));
+		String dir = "";
+		if(mouseX > HeroLocX) {
+			dir = "right";
+			System.out.println("SHOOTING RIGHT: HeroLocX: " + HeroLocX + " Mouse LocX: " + mouseX);
+		}else if(mouseX < HeroLocX) {
+			dir = "left";
+			System.out.println("SHOOTING LEFT: HeroLocX: " + HeroLocX + " Mouse LocX: " + mouseX);
+		}else { //equal (meaning center)
+			System.out.println("SHOOTING EQUAL: HeroLocX: " + HeroLocX + " Mouse LocX: " + mouseX);
+			if(mouseY < HeroLocY) {
+				dir = "down";
+				System.out.println("SHOOTING DOWN: HeroLocY: " + HeroLocY + " Mouse LocY: " + mouseY);
+			}else if(mouseY > HeroLocY) {
+				dir = "up";
+				System.out.println("SHOOTING UP: HeroLocY: " + HeroLocY + " Mouse LocY: " + mouseY);
+			}
+		}
+		Blast tempBlast = new Blast(slope, dir, powerSet[powerIndex].Dmg, powerSet[powerIndex].Range, HeroLocX, HeroLocY, powerSet[powerIndex].color, powerSet[powerIndex].Effect);
+		Blast[] tempArray = new Blast[blasts.length + 1];
+		for(int i = 0; i < blasts.length; i++)
+			tempArray[i] = blasts[i];
+		tempArray[blasts.length] = tempBlast;
+		blasts = tempArray;
 	}
 			
 	public void effectStat(String effect, Enemy enemy)
