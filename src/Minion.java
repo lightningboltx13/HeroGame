@@ -73,15 +73,19 @@ public class Minion implements Enemy
 		switch(temp) {
 			case 0:
 				this.initialize("minion-" + temp, "", 15, 7, 8, "5.slow", Color.blue);
+				length = 2;
 				break;
 			case 1:
 				this.initialize("minion-" + temp, "", 20, 10, 5, "5.hurt", Color.red);
+				length = 1;
 				break;
 			case 2:
 				this.initialize("minion-" + temp, "", 30, 7, 3, "5.stun", Color.yellow);
+				length = .5;
 				break;
 			case 3:
 				this.initialize("minion-" + temp, "", 15, 5, 5, ".immunity", Color.green);
+				length = 0;
 				break;
 		}
 		
@@ -195,7 +199,7 @@ public class Minion implements Enemy
 		return this.health;
 	}
 	@Override
-	public void subtractHealth(int health) {
+	public void lossHealth(int health) {
 		//TODO: Check for negative values
 		this.health = this.getHealth() - health;
 	}

@@ -119,7 +119,7 @@ public class Boss implements Enemy
 	}
 
 	@Override
-	public void subtractHealth(int health) {
+	public void lossHealth(int health) {
 		//TODO: Check for negative values
 		this.health = this.getHealth() - health;
 	}

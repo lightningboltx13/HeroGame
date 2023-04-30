@@ -8,7 +8,7 @@ public interface Enemy {
 	
 	public void setHealth(int health);
 	public int getHealth();
-	public void subtractHealth(int health);
+	public void lossHealth(int health);
 	
 	public void setSpeed(int speed);
 	public int getSpeed();
