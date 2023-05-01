@@ -811,8 +811,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			{
 				if(mouseY > HeroLocY)
 				{
-					Eslope1 = Math.atan(((double)boss.yPoints[1] - HeroLocY)/((double)boss.xPoints[1] - HeroLocX));
-					Eslope2 = Math.atan(((double)boss.yPoints[3] - HeroLocY)/((double)boss.xPoints[3] - HeroLocX));
+					Eslope1 = Math.atan((boss.yPoints[1] - HeroLocY)/(boss.xPoints[1] - HeroLocX));
+					Eslope2 = Math.atan((boss.yPoints[3] - HeroLocY)/(boss.xPoints[3] - HeroLocX));
 					
 					//right
 					if(mouseX > HeroLocX && boss.getLocationX() > HeroLocX)
@@ -838,8 +838,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				}
 				else
 				{
-					Eslope1 = Math.atan((HeroLocY - (double)boss.yPoints[1])/(HeroLocX - (double)boss.xPoints[1]));
-					Eslope2 = Math.atan((HeroLocY - (double)boss.yPoints[3])/(HeroLocX - (double)boss.xPoints[3]));
+					Eslope1 = Math.atan((HeroLocY - boss.yPoints[1])/(HeroLocX - boss.xPoints[1]));
+					Eslope2 = Math.atan((HeroLocY - boss.yPoints[3])/(HeroLocX - boss.xPoints[3]));
 					
 					//right
 					if(mouseX> HeroLocX && boss.getLocationX() > HeroLocX)
@@ -876,8 +876,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				{
 					if(mouseY > HeroLocY)
 					{
-						Eslope1 = Math.atan(((double)minion.yPoints[1] - HeroLocY)/((double)minion.xPoints[1] - HeroLocX));
-						Eslope2 = Math.atan(((double)minion.yPoints[2] - HeroLocY)/((double)minion.xPoints[2] - HeroLocX));
+						Eslope1 = Math.atan((minion.yPoints[1] - HeroLocY)/(minion.xPoints[1] - HeroLocX));
+						Eslope2 = Math.atan((minion.yPoints[2] - HeroLocY)/(minion.xPoints[2] - HeroLocX));
 						
 						//right
 						if(mouseX > HeroLocX && minion.getLocationX() > HeroLocX)
@@ -904,8 +904,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					}
 					else
 					{
-						Eslope1 = Math.atan((HeroLocY - (double)minion.yPoints[1])/(HeroLocX - (double)minion.xPoints[1]));
-						Eslope2 = Math.atan((HeroLocY - (double)minion.yPoints[2])/(HeroLocX - (double)minion.xPoints[2]));
+						Eslope1 = Math.atan((HeroLocY - minion.yPoints[1])/(HeroLocX - minion.xPoints[1]));
+						Eslope2 = Math.atan((HeroLocY - minion.yPoints[2])/(HeroLocX - minion.xPoints[2]));
 						
 						//right
 						if(mouseX > HeroLocX && minion.getLocationX() > HeroLocX)
