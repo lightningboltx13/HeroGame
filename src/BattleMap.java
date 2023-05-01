@@ -1,7 +1,16 @@
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Frame;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.*;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BattleMap extends Frame implements KeyListener, MouseListener, FocusListener
 {
