@@ -1,7 +1,16 @@
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Frame;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.*;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BattleMap extends Frame implements KeyListener, MouseListener, FocusListener
 {
@@ -241,8 +250,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			}
 			
 			//draw health and energy bars
-			drawer.drawBars(getGraphics(), HeroHealth, HeroEnergy);
 			drawer.drawTest(getGraphics(), powerSet[powerIndex].name);
+			drawer.drawBars(getGraphics(), HeroHealth, HeroEnergy);
 
 			
 			//death checks
@@ -284,7 +293,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			}
 
 //			update(getGraphics());
-			timer.schedule(new testEvent(), 60);
+			timer.schedule(new testEvent(), 20);
 //			update(getGraphics());
 		}
 	}
@@ -370,85 +379,85 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	
 	public void moveMinions(String status) {
 		try{
-			for(int i = 0; i < minions.length; i++)
+			for(Minion minion: minions)
 			{
-				String Estatus = minions[i].getStatusText();
-				int Eduration = minions[i].getDuration();
+				String Estatus = minion.getStatusText();
+				int Eduration = minion.getDuration();
 				
-				double minionSpeed = minions[i].getSpeed();
+				double minionSpeed = minion.getSpeed();
 				if(Estatus.contains("slow"))
 					minionSpeed /= 2;
 				if(Estatus.contains("stun"))
 					minionSpeed = 0;
 				if(Estatus.contains("hurt"))
-					minions[i].loseHealth(1);
+					minion.loseHealth(1);
 				if(!Estatus.contains("none") && !Estatus.contains("immunity"))
 				{
 					Eduration--;
 					if(Eduration == 0)
-						minions[i].setStatus(".none");
+						minion.setStatus(".none");
 					else
-						minions[i].setStatus(Eduration + "." + Estatus);
+						minion.setStatus(Eduration + "." + Estatus);
 				}
-				if(minions[i].getLocationX() == HeroLocX)
+				if(minion.getLocationX() == HeroLocX)
 				{
-					if(minions[i].getLocationY() > HeroLocY)
-						minions[i].addLocationY(-(minionSpeed));
-					else if(minions[i].getLocationY() < HeroLocY)
-						minions[i].addLocationY(minionSpeed);
-					minions[i].addLocationX(1);
+					if(minion.getLocationY() > HeroLocY)
+						minion.addLocationY(-(minionSpeed));
+					else if(minion.getLocationY() < HeroLocY)
+						minion.addLocationY(minionSpeed);
+					minion.addLocationX(1);
 				}
 				else
 				{
 					int dir = 1;
-					if(minions[i].getLocationX() > HeroLocX)
+					if(minion.getLocationX() > HeroLocX)
 						dir = -1;
-					minions[i].addLocationX(dir*(Math.cos(minions[i].slope)*minionSpeed));
-					minions[i].addLocationY(dir*(Math.sin(minions[i].slope)*minionSpeed));
+					minion.addLocationX(dir*(Math.cos(minion.slope)*minionSpeed));
+					minion.addLocationY(dir*(Math.sin(minion.slope)*minionSpeed));
 				}
 				
 				double temp1, temp2;
-				temp1 = Math.pow(minions[i].getLocationX() - HeroLocX,2);
-				temp2 = Math.pow(minions[i].getLocationY() - HeroLocY,2);
+				temp1 = Math.pow(minion.getLocationX() - HeroLocX,2);
+				temp2 = Math.pow(minion.getLocationY() - HeroLocY,2);
 				if(Math.sqrt(temp1 + temp2) <= 10)
-					minionHit(minions[i], i, status);
+					minionHit(minion, status);
 				
-				minions[i].draw(getGraphics(), HeroLocX, HeroLocY, minions[i]);
+				minion.draw(getGraphics(), HeroLocX, HeroLocY, minion);
 			}
 		}catch (NullPointerException ex){}
 	}
 	public void thenIStartedBlasting() {
 		try{
 			//Blast Movement, collision, and end of life
-			for(int i = 0; i < blasts.length; i++)
+			for(Blast blast: blasts)
 			{
-				if(blasts[i].direction.equals("right"))
+				if(blast.direction.equals("right"))
 				{
-					blasts[i].LocX += Math.cos(blasts[i].Slope)*5;
-					blasts[i].LocY += Math.sin(blasts[i].Slope)*5;
+					blast.LocX += Math.cos(blast.Slope)*5;
+					blast.LocY += Math.sin(blast.Slope)*5;
 				}
-				else if(blasts[i].direction.equals("left"))
+				else if(blast.direction.equals("left"))
 				{
-					blasts[i].LocX -= Math.cos(blasts[i].Slope)*5;
-					blasts[i].LocY -= Math.sin(blasts[i].Slope)*5;
+					blast.LocX -= Math.cos(blast.Slope)*5;
+					blast.LocY -= Math.sin(blast.Slope)*5;
 				}
-				else if(blasts[i].direction.equals("up"))
+				else if(blast.direction.equals("up"))
 				{
-					blasts[i].LocY -= 5;
+					blast.LocY -= 5;
 				}
-				else if(blasts[i].direction.equals("down"))
+				else if(blast.direction.equals("down"))
 				{
-					blasts[i].LocY += 5;
+					blast.LocY += 5;
 				}
 				
 				if(boss.fighting)
 				{
 					//collision detection
-					double blastDis = Math.sqrt(Math.pow(boss.getLocationX() - blasts[i].LocX, 2) + Math.pow(boss.getLocationY() - blasts[i].LocY, 2));
+					double blastDis = Math.sqrt(Math.pow(boss.getLocationX() - blast.LocX, 2) + Math.pow(boss.getLocationY() - blast.LocY, 2));
 					if(blastDis <= 10)
 					{
-						blasts[i].hit = true;
-						boss.loseHealth(blasts[i].Dmg);
+						blast.hit = true;
+						boss.loseHealth(blast.Dmg);
 						bossEffectStat(powerSet[powerIndex].effect, boss);
 					}
 				}
@@ -456,22 +465,22 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				{
 					for(int a = 0; a < minions.length; a++)
 					{
-						double blastDis = Math.sqrt(Math.pow(minions[a].getLocationX() - blasts[i].LocX, 2) + Math.pow(minions[a].getLocationY() - blasts[i].LocY, 2));
+						double blastDis = Math.sqrt(Math.pow(minions[a].getLocationX() - blast.LocX, 2) + Math.pow(minions[a].getLocationY() - blast.LocY, 2));
 						if(blastDis <= 5)
 						{
-							blasts[i].hit = true;
-							minions[a].loseHealth(blasts[i].Dmg);
-							applyHeroEffectToMinion(blasts[i].effect, minions[a]);
+							blast.hit = true;
+							minions[a].loseHealth(blast.Dmg);
+							applyHeroEffectToMinion(blast.effect, minions[a]);
 						}
 					}
 				}
 				
 				double temp1, temp2;
-				temp1 = Math.pow(blasts[i].LocX - blasts[i].srtX, 2);
-				temp2 = Math.pow(blasts[i].LocY - blasts[i].srtY, 2);
+				temp1 = Math.pow(blast.LocX - blast.srtX, 2);
+				temp2 = Math.pow(blast.LocY - blast.srtY, 2);
 				double travled = Math.sqrt(temp1 + temp2);
-				if(travled >= blasts[i].Range*50)
-					blasts[i].hit = true;
+				if(travled >= blast.Range*50)
+					blast.hit = true;
 			}
 			
 			//blast array resizer
@@ -510,18 +519,18 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			
 			if(!boss.fighting)
 			{
-				for(int i = 0; i < minions.length; i++)
+				for(Minion minion: minions)
 				{
 					try{
-						for(int m = 0; m < mines.length; m++)
+						for(Mine mine: mines)
 						{
 							//enemies is null!!!
-							mine1 = Math.pow(minions[i].getLocationX() - mines[m].locX, 2);
-							mine2 = Math.pow(minions[i].getLocationY() - mines[m].locY, 2);
+							mine1 = Math.pow(minion.getLocationX() - mine.locX, 2);
+							mine2 = Math.pow(minion.getLocationY() - mine.locY, 2);
 							if(Math.sqrt(mine1 + mine2) <= 10)
 							{
-								minions[i].loseHealth(10);
-								mines[m].exploded = true;
+								minion.loseHealth(10);
+								mine.exploded = true;
 							}
 							else
 								mineCount++;
@@ -531,14 +540,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			}
 			else
 			{
-				for(int m = 0; m < mines.length; m++)
+				for(Mine mine: mines)
 				{
-					mine1 = Math.pow(boss.getLocationX() - mines[m].locX, 2);
-					mine2 = Math.pow(boss.getLocationY() - mines[m].locY, 2);
+					mine1 = Math.pow(boss.getLocationX() - mine.locX, 2);
+					mine2 = Math.pow(boss.getLocationY() - mine.locY, 2);
 					if(Math.sqrt(mine1 + mine2) <= 10)
 					{
 						boss.loseHealth(10);
-						mines[m].exploded = true;
+						mine.exploded = true;
 					}
 					else
 						mineCount++;
@@ -546,16 +555,16 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			}
 			Mine[] tempArray = new Mine[mineCount];
 			int tempCount = 0;
-			for(int m = 0; m < mines.length; m++)
+			for(Mine mine: mines)
 			{
 				try{
-					if(!mines[m].exploded)
+					if(!mine.exploded)
 					{
 						//TODO: Might have an array index out of bounds, need to look into
 						//System.out.println("mineCount: " + mineCount);
 						//System.out.println("tempArray Index: " + tempCount);
 						//System.out.println("mines Index: " + m);
-						tempArray[tempCount] = mines[m];
+						tempArray[tempCount] = mine;
 						tempCount++;
 					}
 				}catch (NullPointerException ex){}
@@ -565,8 +574,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		
 		//draw mines
 		try{
-			for(int m = 0; m < mines.length; m++)
-				mines[m].drawMine(getGraphics(),  mines[m]);
+			for(Mine mine: mines)
+				mine.drawMine(getGraphics(),  mine);
 		}catch (NullPointerException ex){}
 		
 	}
@@ -576,13 +585,13 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		this.hide();
 	}
 	
-	public void minionHit(Minion minion, int index, String heroStatus)
+	public void minionHit(Minion minion, String heroStatus)
 	{
 		int damage = minion.getDamage();
 		if(heroStatus.contains("defend"))
 			damage /= 2;
 		HeroHealth -= damage;
-		minions[index].setHealth(0);
+		minion.setHealth(0);
 		if(HeroStatus.equals(".none") && !minion.getEffect().contains("immunity"))
 			HeroStatus = minion.getEffect();
 	}
@@ -933,10 +942,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			System.out.println("SHOOTING LEFT: HeroLocX: " + HeroLocX + " Mouse LocX: " + mouseX);
 		}else { //equal (meaning center)
 			System.out.println("SHOOTING EQUAL: HeroLocX: " + HeroLocX + " Mouse LocX: " + mouseX);
-			if(mouseY < HeroLocY) {
+			if(mouseY > HeroLocY) {
 				dir = "down";
 				System.out.println("SHOOTING DOWN: HeroLocY: " + HeroLocY + " Mouse LocY: " + mouseY);
-			}else if(mouseY > HeroLocY) {
+			}else{
 				dir = "up";
 				System.out.println("SHOOTING UP: HeroLocY: " + HeroLocY + " Mouse LocY: " + mouseY);
 			}
@@ -1039,7 +1048,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	public void focusGained(FocusEvent e)
 	{
 		timer = new Timer();
-		timer.schedule(new testEvent(), 60);
+		timer.schedule(new testEvent(), 20);
 	}
 	
 	public void focusLost(FocusEvent e)

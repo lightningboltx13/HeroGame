@@ -1,5 +1,4 @@
 /*
- * Imports should not contain "Wildcards"
  * 
  * Command Design Patterns
  * 	Remove If-Statements
@@ -13,11 +12,23 @@
  * 
  * Arturo Documentation
  * 
- * 
  * shorthanded for/loops
  * 
  * lambdas
  * 
+ * calculateDistance function
+ * calculateSlope function
+ * 
+ * Mavenise the Projects
+ * 
+ * 
+ * JFrames?
+ * Remove screen flicker
+ * http://medialab.di.unipi.it/web/doc/tutorial/uiswing/converting/how.html
+ * 
+ * Stacking Statuses
+ * 
+ * Hero resolves nearly every function in BattleMap, Transfer the functions to Hero Object, to allow for reuse.
  */
 public class STUFFTOFIX {
 

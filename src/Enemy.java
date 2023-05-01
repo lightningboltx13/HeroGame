@@ -18,12 +18,10 @@ public interface Enemy {
 	
 	public void setLocationX(double x);
 	public double getLocationX();
-	public void addLocationX(int modifier);
 	public void addLocationX(double modifier);
 	
 	public void setLocationY(double y);
 	public double getLocationY();
-	public void addLocationY(int modifier);
 	public void addLocationY(double modifier);
 	
 	public void setStatus(String status);

@@ -1,4 +1,5 @@
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -26,8 +27,8 @@ public class Minion implements Enemy
 	double slope;
 	
 	//TODO: Change to double
-	int[] xPoints = new int[3];
-	int[] yPoints = new int[3];
+	double[] xPoints = new double[3];
+	double[] yPoints = new double[3];
 	
 	
 	
@@ -130,7 +131,7 @@ public class Minion implements Enemy
 		}
 		else
 		{
-			double slope = Math.atan((double)(heroY- minion.locationY)/(heroX - minion.locationX));
+			slope = Math.atan((double)(heroY- minion.locationY)/(heroX - minion.locationX));
 			double wingSlope = Math.atan((double)-(heroX- minion.locationX)/(heroY - minion.locationY));
 			
 			int dir = 1;
@@ -153,10 +154,20 @@ public class Minion implements Enemy
 		}
 		g.setColor(minion.color);
 		
+
+		int[] drawPointsX = new int[3];
+		int[] drawPointsY = new int[3];
+
+		for(int i = 0; i < 3; i++)
+		{
+			drawPointsX[i] = (int) xPoints[i];
+			drawPointsY[i] = (int) yPoints[i];
+		}
+		
 		if(minion.health == 1)
 			g.setColor(Color.white);
 		//TODO: Once you change to double then do casting to int's because fillPolygon(int[],int[],int)
-		g.fillPolygon(xPoints, yPoints, 3);
+		g.fillPolygon(drawPointsX, drawPointsY, 3);
 	}
 	@Override
 	public void setHealth(int health) {
@@ -196,11 +207,6 @@ public class Minion implements Enemy
 		return this.locationX;
 	}
 	@Override
-	public void addLocationX(int modifier) {
-		this.locationX = this.getLocationX() + modifier;
-	}
-	
-	@Override
 	public void addLocationX(double modifier) {
 		this.locationX = this.getLocationX() + modifier;
 	}
@@ -212,10 +218,6 @@ public class Minion implements Enemy
 	@Override
 	public double getLocationY() {
 		return this.locationY;
-	}
-	@Override
-	public void addLocationY(int modifier) {
-		this.locationY = this.getLocationY() + modifier;
 	}
 	@Override
 	public void addLocationY(double modifier) {
