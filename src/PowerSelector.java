@@ -77,7 +77,7 @@ public class PowerSelector extends Frame implements ActionListener, MouseListene
 		world = place;
 		mode = GameMode;
 		boss = badGuy;
-		
+		//TODO: should only have to read in once
 		FileReader fr = new FileReader(file);
 		BufferedReader reader = new BufferedReader(fr);
 		reader.readLine();

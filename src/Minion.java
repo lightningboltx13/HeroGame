@@ -14,7 +14,7 @@ public class Minion implements Enemy
 	private double locationX;
 	private double locationY;
 	
-	//Is length = duration here?
+	//TODO: Is length = duration here?
 	double length;
 	
 	private Color color;
@@ -26,7 +26,6 @@ public class Minion implements Enemy
 	
 	double slope;
 	
-	//TODO: Change to double
 	double[] xPoints = new double[3];
 	double[] yPoints = new double[3];
 	
@@ -93,6 +92,7 @@ public class Minion implements Enemy
 	
 	public void draw(Graphics g, int heroX, int heroY, Minion minion)
 	{
+		//TODO: should have minion "getLocationX()" and "getLocationY()" but breaks stuff idk why
 		xPoints[0] = (int)minion.locationX;
 		yPoints[0] = (int)minion.locationY;
 		
@@ -166,7 +166,6 @@ public class Minion implements Enemy
 		
 		if(minion.health == 1)
 			g.setColor(Color.white);
-		//TODO: Once you change to double then do casting to int's because fillPolygon(int[],int[],int)
 		g.fillPolygon(drawPointsX, drawPointsY, 3);
 	}
 	@Override

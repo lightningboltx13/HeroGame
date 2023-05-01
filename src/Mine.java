@@ -5,6 +5,8 @@ public class Mine {
 
 	int locX, locY;
 	boolean exploded = false;
+	//TODO: make private and have getters/setters to retrieve data
+	//TODO: do more "mine" logic in here instead of battle map
 	
 	public Mine(int x, int y)
 	{

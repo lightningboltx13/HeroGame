@@ -2,7 +2,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Blast {
-
+	//TODO: make values private and create getters/setters
+	//TODO: Do more "blast" logic in here
 	double Slope;
 	String direction;
 	int Dmg, Range;

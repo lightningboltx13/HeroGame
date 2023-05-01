@@ -253,7 +253,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			drawer.drawTest(getGraphics(), powerSet[powerIndex].name);
 			drawer.drawBars(getGraphics(), HeroHealth, HeroEnergy);
 
-			
+			//TODO: break into its own methods?
 			//death checks
 			if(HeroHealth <= 0)
 			{
