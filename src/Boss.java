@@ -152,10 +152,6 @@ public class Boss implements Enemy
 		return this.locationX;
 	}
 	@Override
-	public void addLocationX(int modifier) {
-		this.locationX = this.getLocationX() + modifier;
-	}
-	@Override
 	public void addLocationX(double modifier) {
 		this.locationX = this.getLocationX() + modifier;
 	}
@@ -167,10 +163,6 @@ public class Boss implements Enemy
 	@Override
 	public double getLocationY() {
 		return this.locationY;
-	}
-	@Override
-	public void addLocationY(int modifier) {
-		this.locationY = this.getLocationY() + modifier;
 	}
 	@Override
 	public void addLocationY(double modifier) {
