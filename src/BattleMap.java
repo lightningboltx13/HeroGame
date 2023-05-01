@@ -18,7 +18,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	String mode;
 	int world;
 	
-	int HeroHealth = 100, HeroEnergy = 100;
+	int HeroEnergy = 100;
 	int regen = 0;
 	boolean HeroPosition = false;
 	int HeroLocX = 640, HeroLocY = 480;
@@ -191,7 +191,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						int damage = boss.getDamage();
 						if(heroStatus.contains(".defend"))
 							damage /= 2;
-						HeroHealth -= damage;
+						drawer.loseHealth(damage);
 						
 						if(HeroStatus.equals(".none"))
 							if(boss.getEffect().equals("20.knockback"))
@@ -251,11 +251,12 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			
 			//draw health and energy bars
 			drawer.drawTest(getGraphics(), powerSet[powerIndex].name);
-			drawer.drawBars(getGraphics(), HeroHealth, HeroEnergy);
+			//TODO: Change to use internal properties instead of passing them in
+			drawer.drawBars(getGraphics(), drawer.getHealth(), HeroEnergy);
 
 			//TODO: break into its own methods?
 			//death checks
-			if(HeroHealth <= 0)
+			if(drawer.getHealth() <= 0)
 			{
 				if(!gameEnd)
 				{
@@ -312,7 +313,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			//do nothing---none
 			break;
 		case "hurt":
-			HeroHealth--;
+			drawer.loseHealth(1);
 			break;
 			//need to account for immunity and defend still?
 		default:
@@ -590,7 +591,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		int damage = minion.getDamage();
 		if(heroStatus.contains("defend"))
 			damage /= 2;
-		HeroHealth -= damage;
+		drawer.loseHealth(damage);
 		minion.setHealth(0);
 		if(HeroStatus.equals(".none") && !minion.getEffect().contains("immunity"))
 			HeroStatus = minion.getEffect();

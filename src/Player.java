@@ -6,6 +6,14 @@ import java.awt.PointerInfo;
 
 public class Player {
 	//enhance to store data in properties like enemies
+	private String status = ".none";
+	private int energy=100;
+	private int health=100;
+	private int regen=0;
+	private boolean HeroPosition = false;
+	private int HeroLocX = 640;
+	private int HeroLocY = 480;
+	
 
 	public Player(){}
 	
@@ -113,4 +121,43 @@ public class Player {
 		g.drawString(test,  450,  65);
 
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public int getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(int energy) {
+		this.energy = energy;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
+	
+	public void loseHealth(int damageDone) {
+		this.health = this.health - damageDone ;
+	}
+
+	public int getRegen() {
+		return regen;
+	}
+
+	public void setRegen(int regen) {
+		this.regen = regen;
+	}
+	
+	
+	
 }
