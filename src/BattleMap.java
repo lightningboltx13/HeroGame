@@ -18,7 +18,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	String mode;
 	int world;
 	
-	int HeroEnergy = 100;
+	//int HeroEnergy = 100;
 	int regen = 0;
 	boolean HeroPosition = false;
 	int HeroLocX = 640, HeroLocY = 480;
@@ -240,11 +240,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				boss.drawBars(getGraphics(), boss);
 			}
 			
-			if(HeroEnergy < 100)
+			if(drawer.getEnergy() < 100)
 				regen++;
 			if(regen == 10)
 			{
-				HeroEnergy++;
+				drawer.setEnergy(drawer.getEnergy() + 1);
 				//HeroEnergy+=100;
 				regen = 0;
 			}
@@ -252,7 +252,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			//draw health and energy bars
 			drawer.drawTest(getGraphics(), powerSet[powerIndex].name);
 			//TODO: Change to use internal properties instead of passing them in
-			drawer.drawBars(getGraphics(), drawer.getHealth(), HeroEnergy);
+			drawer.drawBars(getGraphics(), drawer.getHealth(), drawer.getEnergy());
 
 			//TODO: break into its own methods?
 			//death checks
@@ -647,10 +647,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	public void mouseClicked(MouseEvent e)
 	{
 		try{
-			if(HeroEnergy > powerSet[powerIndex].cost)
+			if(drawer.getEnergy() > powerSet[powerIndex].cost)
 			{
 				HeroPosition = true;
-				HeroEnergy -= powerSet[powerIndex].cost;
+				 drawer.setEnergy(drawer.getEnergy() - powerSet[powerIndex].cost);
 				
 				switch(powerSet[powerIndex].shape) {
 				case "beam":
