@@ -143,6 +143,7 @@ public class MemoryMenu extends Frame implements ActionListener, FocusListener
 			}
 			else //svLd
 			{
+				//TODO: maybe iterate thru slots and memory slots instead?
 				for(int i = 0; i < 3; i++)
 				{
 					if(memorySlots[i].getBackground() == Color.blue)

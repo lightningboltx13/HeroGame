@@ -19,6 +19,7 @@ public class StartMenu extends Frame implements ActionListener
 	Panel buttonPane = new Panel();
 	
 	Label Title = new Label("       HERO II");
+	//TODO: Maybe use label.setAlignment(Align.center)? instead of spaces?
 	
 	Button newGame = new Button("New Game");
 	Button loadGame = new Button("Load Game");

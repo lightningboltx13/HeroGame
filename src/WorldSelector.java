@@ -57,7 +57,9 @@ public class WorldSelector extends Frame implements ActionListener, MouseListene
 			main.setLayout(new BorderLayout());
 		main.add(wrdBtnPane, BorderLayout.CENTER);
 			wrdBtnPane.setLayout(new GridLayout(11,1));
+		
 			
+		//TODO: Only read thru boss.txt once and store information
 		File file = new File("boss.txt");
 		FileReader fr = new FileReader(file);
 		BufferedReader reader = new BufferedReader(fr);
@@ -136,7 +138,7 @@ public class WorldSelector extends Frame implements ActionListener, MouseListene
 						 */
 						boss.initialize(
 								reader.readLine(), 
-								reader.readLine(), 
+								reader.readLine(),  //TODO: Figure out a way to not have to store world since boss doesn't need it
 								Integer.parseInt(reader.readLine()), 
 								Integer.parseInt(reader.readLine()), 
 								Integer.parseInt(reader.readLine()), 
@@ -170,6 +172,7 @@ public class WorldSelector extends Frame implements ActionListener, MouseListene
 		for(int i = 0; i < 11; i++)
 			if(e.getSource() == wrdBtnArray[i])
 				try{
+					//TODO: Probably don't need to read thru file again, figure out if you can use data already stored
 					File file = new File("boss.txt");
 					FileReader fr = new FileReader(file);
 					BufferedReader reader = new BufferedReader(fr);

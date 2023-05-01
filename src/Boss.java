@@ -28,6 +28,7 @@ public class Boss implements Enemy
 	
 	//TODO: boss only thing?
 	boolean fighting = false;
+	//TODO: maybe private create getters/setters
 	double[] xPoints = new double[4];
 	double[] yPoints = new double[4];
 	

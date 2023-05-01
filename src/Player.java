@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.PointerInfo;
 
 public class Player {
+	//enhance to store data in properties like enemies
 
 	public Player(){}
 	

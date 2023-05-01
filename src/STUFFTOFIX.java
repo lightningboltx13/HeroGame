@@ -29,6 +29,13 @@
  * Stacking Statuses
  * 
  * Hero resolves nearly every function in BattleMap, Transfer the functions to Hero Object, to allow for reuse.
+ * 
+ * 
+ *-------------Jenn Ideas--------------
+ * 
+ * -Add in jUNITS for easy automated testing
+ * 
+ * -javadocs
  */
 public class STUFFTOFIX {
 

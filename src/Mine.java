@@ -3,8 +3,11 @@ import java.awt.Graphics;
 
 public class Mine {
 
-	int locX, locY;
+	int locX;
+	int locY;
 	boolean exploded = false;
+	//TODO: make private and have getters/setters to retrieve data
+	//TODO: do more "mine" logic in here instead of battle map
 	
 	public Mine(int x, int y)
 	{
@@ -19,5 +22,12 @@ public class Mine {
 		g.setColor(Color.red);
 		g.fillOval(mine.locX - 2, mine.locY - 2, 4, 4);
 	}
+
+	@Override
+	public String toString() {
+		return "Mine [locX=" + locX + ", locY=" + locY + ", exploded=" + exploded + "]";
+	}
+	
+	
 	
 }
