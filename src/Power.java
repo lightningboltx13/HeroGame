@@ -1,7 +1,11 @@
 import java.awt.*;
 
 public class Power {
-	String Name, Effect, Shape;
-	int Dmg, Range, Cost;
+	String name;
+	String effect;
+	String shape;
+	int damage; 
+	int range;
+	int cost;
 	Color color;
 }

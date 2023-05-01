@@ -242,7 +242,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			
 			//draw health and energy bars
 			drawer.drawBars(getGraphics(), HeroHealth, HeroEnergy);
-			drawer.drawTest(getGraphics(), powerSet[powerIndex].Name);
+			drawer.drawTest(getGraphics(), powerSet[powerIndex].name);
 
 			
 			//death checks
@@ -449,7 +449,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						blasts[i].hit = true;
 						boss.loseHealth(blasts[i].Dmg);
-						bossEffectStat(powerSet[powerIndex].Effect, boss);
+						bossEffectStat(powerSet[powerIndex].effect, boss);
 					}
 				}
 				else
@@ -637,12 +637,12 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	public void mouseClicked(MouseEvent e)
 	{
 		try{
-			if(HeroEnergy > powerSet[powerIndex].Cost)
+			if(HeroEnergy > powerSet[powerIndex].cost)
 			{
 				HeroPosition = true;
-				HeroEnergy -= powerSet[powerIndex].Cost;
+				HeroEnergy -= powerSet[powerIndex].cost;
 				
-				switch(powerSet[powerIndex].Shape) {
+				switch(powerSet[powerIndex].shape) {
 				case "beam":
 					this.doBeam((int)e.getLocationOnScreen().getX(), (int)e.getLocationOnScreen().getY());
 					break;
@@ -659,7 +659,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					this.doSelf((int)e.getLocationOnScreen().getX(), (int)e.getLocationOnScreen().getY());
 					break;
 				default:
-					System.err.println("Unknown Power: " + powerSet[powerIndex].Shape);
+					System.err.println("Unknown Power: " + powerSet[powerIndex].shape);
 				}
 			}
 		}catch(NullPointerException e1){}
@@ -697,10 +697,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		{
 			temp1 = Math.pow(boss.getLocationX() - fistX,  2);
 			temp2 = Math.pow(boss.getLocationY() - fistY,  2);
-			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
+			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].range*10)
 			{
-				boss.loseHealth(powerSet[powerIndex].Dmg);
-				bossEffectStat(powerSet[powerIndex].Effect, boss);
+				boss.loseHealth(powerSet[powerIndex].damage);
+				bossEffectStat(powerSet[powerIndex].effect, boss);
 			}
 		}
 		else
@@ -709,10 +709,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			{
 				temp1 = Math.pow(minions[i].getLocationX() - fistX,  2);
 				temp2 = Math.pow(minions[i].getLocationY() - fistY,  2);
-				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*10)
+				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].range*10)
 				{
-					minions[i].loseHealth(powerSet[powerIndex].Dmg);
-					applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
+					minions[i].loseHealth(powerSet[powerIndex].damage);
+					applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
 				}
 			}
 		}
@@ -721,12 +721,12 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	public void doSelf(int mouseX, int mouseY) {
 		boolean powerRead = false;
 		String power = "";
-		for(int i = 0; i < powerSet[powerIndex].Effect.length(); i++)
+		for(int i = 0; i < powerSet[powerIndex].effect.length(); i++)
 		{
-			if(powerSet[powerIndex].Effect.charAt(i) == '.')
+			if(powerSet[powerIndex].effect.charAt(i) == '.')
 				powerRead = true;
 			else if(powerRead)
-				power = power + powerSet[powerIndex].Effect.charAt(i);
+				power = power + powerSet[powerIndex].effect.charAt(i);
 		}
 		
 		if(power.contains("mine"))
@@ -752,7 +752,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		
 		else if(power.contains("defend"))
 		{
-			HeroStatus = powerSet[powerIndex].Effect;
+			HeroStatus = powerSet[powerIndex].effect;
 		}else {
 			System.err.println("Unknown Hero Power: " + power);
 		}
@@ -765,10 +765,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		{
 			temp1 = Math.pow(boss.getLocationX() - HeroLocX,  2);
 			temp2 = Math.pow(boss.getLocationY() - HeroLocY,  2);
-			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
+			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].range*50)
 			{
-				boss.loseHealth(powerSet[powerIndex].Dmg);
-				bossEffectStat(powerSet[powerIndex].Effect, boss);
+				boss.loseHealth(powerSet[powerIndex].damage);
+				bossEffectStat(powerSet[powerIndex].effect, boss);
 			}
 		}
 		else
@@ -777,10 +777,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			{
 				temp1 = Math.pow(minions[i].getLocationX() - HeroLocX,  2);
 				temp2 = Math.pow(minions[i].getLocationY() - HeroLocY,  2);
-				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].Range*50)
+				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].range*50)
 				{
-					minions[i].loseHealth(powerSet[powerIndex].Dmg);
-					applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
+					minions[i].loseHealth(powerSet[powerIndex].damage);
+					applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
 				}
 			}
 		}
@@ -794,7 +794,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			double Eslope1, Eslope2, distance;
 			distance = Math.sqrt(Math.pow(boss.getLocationY() - HeroLocY, 2) + Math.pow(boss.getLocationX() - HeroLocX, 2));
 			
-			if(distance <= powerSet[powerIndex].Range*100)
+			if(distance <= powerSet[powerIndex].range*100)
 			{
 				if(mouseY > HeroLocY)
 				{
@@ -806,8 +806,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						if(Eslope1 <= slope && Eslope2 >= slope)
 						{
-							boss.loseHealth(powerSet[powerIndex].Dmg);
-							bossEffectStat(powerSet[powerIndex].Effect, boss);
+							boss.loseHealth(powerSet[powerIndex].damage);
+							bossEffectStat(powerSet[powerIndex].effect, boss);
 						}
 					}
 					//left
@@ -815,8 +815,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						if(Eslope1 >= slope && Eslope2 <= slope)
 						{
-							boss.loseHealth(powerSet[powerIndex].Dmg);
-							bossEffectStat(powerSet[powerIndex].Effect, boss);
+							boss.loseHealth(powerSet[powerIndex].damage);
+							bossEffectStat(powerSet[powerIndex].effect, boss);
 						}
 					}
 					else {
@@ -833,8 +833,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						if(Eslope1 >= slope && Eslope2 <= slope)
 						{
-							boss.loseHealth(powerSet[powerIndex].Dmg);
-							bossEffectStat(powerSet[powerIndex].Effect, boss);
+							boss.loseHealth(powerSet[powerIndex].damage);
+							bossEffectStat(powerSet[powerIndex].effect, boss);
 						}
 					}
 					//left
@@ -842,8 +842,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					{
 						if(Eslope1 <= slope && Eslope2 >= slope)
 						{
-							boss.loseHealth(powerSet[powerIndex].Dmg);
-							bossEffectStat(powerSet[powerIndex].Effect, boss);
+							boss.loseHealth(powerSet[powerIndex].damage);
+							bossEffectStat(powerSet[powerIndex].effect, boss);
 						}
 					}
 					else {
@@ -859,7 +859,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			{
 				distance = Math.sqrt(Math.pow(minions[i].getLocationY() - HeroLocY, 2) + Math.pow(minions[i].getLocationX() - HeroLocX, 2));
 				
-				if(distance <= powerSet[powerIndex].Range*100)
+				if(distance <= powerSet[powerIndex].range*100)
 				{
 					if(mouseY > HeroLocY)
 					{
@@ -871,8 +871,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
-								minions[i].loseHealth(powerSet[powerIndex].Dmg);
-								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
+								minions[i].loseHealth(powerSet[powerIndex].damage);
+								applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
 							}
 						}
 						//left
@@ -880,8 +880,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
-								minions[i].loseHealth(powerSet[powerIndex].Dmg);
-								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
+								minions[i].loseHealth(powerSet[powerIndex].damage);
+								applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
 							}
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
@@ -899,8 +899,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
-								minions[i].loseHealth(powerSet[powerIndex].Dmg);
-								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
+								minions[i].loseHealth(powerSet[powerIndex].damage);
+								applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
 							}
 						}
 						//left
@@ -908,8 +908,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
-								minions[i].loseHealth(powerSet[powerIndex].Dmg);
-								applyHeroEffectToMinion(powerSet[powerIndex].Effect, minions[i]);
+								minions[i].loseHealth(powerSet[powerIndex].damage);
+								applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
 							}
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
@@ -941,7 +941,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				System.out.println("SHOOTING UP: HeroLocY: " + HeroLocY + " Mouse LocY: " + mouseY);
 			}
 		}
-		Blast tempBlast = new Blast(slope, dir, powerSet[powerIndex].Dmg, powerSet[powerIndex].Range, HeroLocX, HeroLocY, powerSet[powerIndex].color, powerSet[powerIndex].Effect);
+		Blast tempBlast = new Blast(slope, dir, powerSet[powerIndex].damage, powerSet[powerIndex].range, HeroLocX, HeroLocY, powerSet[powerIndex].color, powerSet[powerIndex].effect);
 		Blast[] tempArray = new Blast[blasts.length + 1];
 		for(int i = 0; i < blasts.length; i++)
 			tempArray[i] = blasts[i];
