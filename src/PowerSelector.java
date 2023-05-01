@@ -40,7 +40,7 @@ public class PowerSelector extends Frame implements ActionListener, MouseListene
 	Button backBtn = new Button("Back");
 	Button startBtn = new Button("Start");
 	
-	Color btnColor[] = 
+	private final Color btnColor[] = 
 	{
 		new Color(200, 0, 150),
 		new Color(0, 250, 255),
