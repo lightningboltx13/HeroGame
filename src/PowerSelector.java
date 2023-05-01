@@ -40,7 +40,7 @@ public class PowerSelector extends Frame implements ActionListener, MouseListene
 	Button backBtn = new Button("Back");
 	Button startBtn = new Button("Start");
 	
-	Color btnColor[] = 
+	private final Color btnColor[] = 
 	{
 		new Color(200, 0, 150),
 		new Color(0, 250, 255),
@@ -192,15 +192,15 @@ public class PowerSelector extends Frame implements ActionListener, MouseListene
 							reader.readLine();
 							for(int z = 0; z <= i; z++)
 							{
-								powerSet[a].Name = reader.readLine();
+								powerSet[a].name = reader.readLine();
 									pwrSlot[a].setEnabled(true);
-									pwrSlot[a].setText(powerSet[a].Name);
+									pwrSlot[a].setText(powerSet[a].name);
 									pwrSlot[a].setEnabled(false);
-								powerSet[a].Dmg = Integer.parseInt(reader.readLine());
-								powerSet[a].Range = Integer.parseInt(reader.readLine());
-								powerSet[a].Effect = reader.readLine();
-								powerSet[a].Cost = Integer.parseInt(reader.readLine());
-								powerSet[a].Shape = reader.readLine();
+								powerSet[a].damage = Integer.parseInt(reader.readLine());
+								powerSet[a].range = Integer.parseInt(reader.readLine());
+								powerSet[a].effect = reader.readLine();
+								powerSet[a].cost = Integer.parseInt(reader.readLine());
+								powerSet[a].shape = reader.readLine();
 								
 								String clrStr, whichClr = "red";
 								int red = 0, green = 0, blue = 0;

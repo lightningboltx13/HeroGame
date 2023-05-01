@@ -14,12 +14,12 @@ public class WorldSelector extends Frame implements ActionListener, MouseListene
 	
 	Button[] wrdBtnArray = new Button[11];
 	
-	TextArea wrdInfo = new TextArea(20,75);
+	private final TextArea wrdInfo = new TextArea(20,75);
 	TextArea bossInfo = new TextArea(20,75);
 	
 	Button backBtn = new Button("Back");
 	
-	Color btnColor[] = 
+	private final Color btnColor[] = 
 	{
 		new Color(0, 250, 255),
 		new Color(0, 0, 255),
@@ -50,6 +50,7 @@ public class WorldSelector extends Frame implements ActionListener, MouseListene
 		reader.readLine();
 		for(int i = 0; i < 11; i++)
 		{
+			//load in boss information during world select
 			reader.readLine();
 			Button wrdBtn = new Button(reader.readLine());
 			wrdBtnArray[i] = wrdBtn;
@@ -103,23 +104,35 @@ public class WorldSelector extends Frame implements ActionListener, MouseListene
 			if(e.getSource() == wrdBtnArray[i])
 			{
 				try{
+					//ACTUALLY load in boss stats
 					File file = new File("boss.txt");
 					FileReader fr = new FileReader(file);
 					BufferedReader reader = new BufferedReader(fr);
 					reader.readLine();
 					for(int z = -1; z < i; z++)
 					{
-						boss.bossName = reader.readLine();
-						boss.world = reader.readLine();
-						boss.bossHealth = Integer.parseInt(reader.readLine());
-						boss.BossMaxHealth = boss.bossHealth;
-						boss.bossDmg = Integer.parseInt(reader.readLine());
-						boss.bossSpd = Integer.parseInt(reader.readLine());
-						boss.bossEffect = reader.readLine();
-						boss.bossColor = btnColor[z+1];
+						/**format of file:
+						 * boss name
+						 * world
+						 * health
+						 * damage
+						 * speed
+						 * effect
+						 * color
+						 */
+						boss.initialize(
+								reader.readLine(), 
+								reader.readLine(), 
+								Integer.parseInt(reader.readLine()), 
+								Integer.parseInt(reader.readLine()), 
+								Integer.parseInt(reader.readLine()), 
+								reader.readLine(), 
+								btnColor[z+1]);
+
 					}
 					reader.close();
 				}catch(IOException e1){
+					System.err.println("IOException while reading boss data for initialization. " + e1.getMessage());
 					e1.printStackTrace();
 				}
 				

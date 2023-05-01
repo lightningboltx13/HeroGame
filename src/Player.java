@@ -60,21 +60,21 @@ public class Player {
 		
 		double slope = Math.atan((b.getY() - Yloc)/(b.getX() - Xloc));
 		if(b.getX() > Xloc)
-			g.drawLine(Xloc, Yloc, Xloc + (int)(Math.cos(slope) * (power.Range*100)), Yloc + (int)(Math.sin(slope) * (power.Range*100)));
+			g.drawLine(Xloc, Yloc, Xloc + (int)(Math.cos(slope) * (power.range*100)), Yloc + (int)(Math.sin(slope) * (power.range*100)));
 		else if(b.getX() > Xloc)
-			g.drawLine(Xloc, Yloc, Xloc + (int)(-1*Math.cos(slope) * (power.Range*100)), Yloc + (int)(-1*Math.sin(slope)) * (power.Range*100));
+			g.drawLine(Xloc, Yloc, Xloc + (int)(-1*Math.cos(slope) * (power.range*100)), Yloc + (int)(-1*Math.sin(slope)) * (power.range*100));
 		else
 			if(b.getY() > Yloc)
-				g.drawLine(Xloc, Yloc, Xloc, Yloc + power.Range*100);
+				g.drawLine(Xloc, Yloc, Xloc, Yloc + power.range*100);
 			else
-				g.drawLine(Xloc, Yloc, Xloc, Yloc - power.Range*100);
+				g.drawLine(Xloc, Yloc, Xloc, Yloc - power.range*100);
 		return slope;
 	}
 	
 	public void drawArea(Graphics g, int Xloc, int Yloc, Power power)
 	{
 		g.setColor(power.color);
-		g.drawOval(Xloc - (power.Range*50), Yloc - (power.Range*50), power.Range*100, power.Range*100);
+		g.drawOval(Xloc - (power.range*50), Yloc - (power.range*50), power.range*100, power.range*100);
 	}
 	
 	public void drawMelee(Graphics g, int Xloc, int Yloc, Power power)
