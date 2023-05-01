@@ -463,14 +463,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				}
 				else
 				{
-					for(int a = 0; a < minions.length; a++)
+					for(Minion minion : minions)
 					{
-						double blastDis = Math.sqrt(Math.pow(minions[a].getLocationX() - blast.locationX, 2) + Math.pow(minions[a].getLocationY() - blast.locationY, 2));
+						double blastDis = Math.sqrt(Math.pow(minion.getLocationX() - blast.locationX, 2) + Math.pow(minion.getLocationY() - blast.locationY, 2));
 						if(blastDis <= 5)
 						{
 							blast.hit = true;
-							minions[a].loseHealth(blast.damage);
-							applyHeroEffectToMinion(blast.effect, minions[a]);
+							minion.loseHealth(blast.damage);
+							applyHeroEffectToMinion(blast.effect, minion);
 						}
 					}
 				}
@@ -714,14 +714,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		}
 		else
 		{
-			for(int i = 0; i < minions.length; i++)
+			for(Minion minion : minions)
 			{
-				temp1 = Math.pow(minions[i].getLocationX() - fistX,  2);
-				temp2 = Math.pow(minions[i].getLocationY() - fistY,  2);
+				temp1 = Math.pow(minion.getLocationX() - fistX,  2);
+				temp2 = Math.pow(minion.getLocationY() - fistY,  2);
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].range*10)
 				{
-					minions[i].loseHealth(powerSet[powerIndex].damage);
-					applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
+					minion.loseHealth(powerSet[powerIndex].damage);
+					applyHeroEffectToMinion(powerSet[powerIndex].effect, minion);
 				}
 			}
 		}
@@ -782,14 +782,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		}
 		else
 		{
-			for(int i = 0; i < minions.length; i++)
+			for(Minion minion : minions)
 			{
-				temp1 = Math.pow(minions[i].getLocationX() - HeroLocX,  2);
-				temp2 = Math.pow(minions[i].getLocationY() - HeroLocY,  2);
+				temp1 = Math.pow(minion.getLocationX() - HeroLocX,  2);
+				temp2 = Math.pow(minion.getLocationY() - HeroLocY,  2);
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].range*50)
 				{
-					minions[i].loseHealth(powerSet[powerIndex].damage);
-					applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
+					minion.loseHealth(powerSet[powerIndex].damage);
+					applyHeroEffectToMinion(powerSet[powerIndex].effect, minion);
 				}
 			}
 		}
@@ -864,24 +864,24 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		if(!boss.fighting)
 		{
 			double Eslope1, Eslope2, distance;
-			for(int i = 0; i < minions.length; i++)
+			for(Minion minion : minions)
 			{
-				distance = Math.sqrt(Math.pow(minions[i].getLocationY() - HeroLocY, 2) + Math.pow(minions[i].getLocationX() - HeroLocX, 2));
+				distance = Math.sqrt(Math.pow(minion.getLocationY() - HeroLocY, 2) + Math.pow(minion.getLocationX() - HeroLocX, 2));
 				
 				if(distance <= powerSet[powerIndex].range*100)
 				{
 					if(mouseY > HeroLocY)
 					{
-						Eslope1 = Math.atan(((double)minions[i].yPoints[1] - HeroLocY)/((double)minions[i].xPoints[1] - HeroLocX));
-						Eslope2 = Math.atan(((double)minions[i].yPoints[2] - HeroLocY)/((double)minions[i].xPoints[2] - HeroLocX));
+						Eslope1 = Math.atan(((double)minion.yPoints[1] - HeroLocY)/((double)minion.xPoints[1] - HeroLocX));
+						Eslope2 = Math.atan(((double)minion.yPoints[2] - HeroLocY)/((double)minion.xPoints[2] - HeroLocX));
 						
 						//right
-						if(mouseX > HeroLocX && minions[i].getLocationX() > HeroLocX)
+						if(mouseX > HeroLocX && minion.getLocationX() > HeroLocX)
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
-								minions[i].loseHealth(powerSet[powerIndex].damage);
-								applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
+								minion.loseHealth(powerSet[powerIndex].damage);
+								applyHeroEffectToMinion(powerSet[powerIndex].effect, minion);
 							}
 						}
 						//left
@@ -889,8 +889,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
-								minions[i].loseHealth(powerSet[powerIndex].damage);
-								applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
+								minion.loseHealth(powerSet[powerIndex].damage);
+								applyHeroEffectToMinion(powerSet[powerIndex].effect, minion);
 							}
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
@@ -900,25 +900,25 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					}
 					else
 					{
-						Eslope1 = Math.atan((HeroLocY - (double)minions[i].yPoints[1])/(HeroLocX - (double)minions[i].xPoints[1]));
-						Eslope2 = Math.atan((HeroLocY - (double)minions[i].yPoints[2])/(HeroLocX - (double)minions[i].xPoints[2]));
+						Eslope1 = Math.atan((HeroLocY - (double)minion.yPoints[1])/(HeroLocX - (double)minion.xPoints[1]));
+						Eslope2 = Math.atan((HeroLocY - (double)minion.yPoints[2])/(HeroLocX - (double)minion.xPoints[2]));
 						
 						//right
-						if(mouseX > HeroLocX && minions[i].getLocationX() > HeroLocX)
+						if(mouseX > HeroLocX && minion.getLocationX() > HeroLocX)
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
-								minions[i].loseHealth(powerSet[powerIndex].damage);
-								applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
+								minion.loseHealth(powerSet[powerIndex].damage);
+								applyHeroEffectToMinion(powerSet[powerIndex].effect, minion);
 							}
 						}
 						//left
-						else if(mouseX < HeroLocX && minions[i].getLocationX() < HeroLocX)
+						else if(mouseX < HeroLocX && minion.getLocationX() < HeroLocX)
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
-								minions[i].loseHealth(powerSet[powerIndex].damage);
-								applyHeroEffectToMinion(powerSet[powerIndex].effect, minions[i]);
+								minion.loseHealth(powerSet[powerIndex].damage);
+								applyHeroEffectToMinion(powerSet[powerIndex].effect, minion);
 							}
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
