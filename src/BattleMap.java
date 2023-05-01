@@ -797,6 +797,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	
 	public void doBeam(int mouseX, int mouseY) {
 		double slope = drawer.drawBeam(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
+		System.out.println("Beam slope:" + slope);
+		
+		//TODO: should be able to clean this code up a lot. This should interact with Enemies and not minions and boss separately.
+		//Still getting a horrible graphic bug where the Beam is not being rendered.
 		
 		if(boss.fighting)
 		{

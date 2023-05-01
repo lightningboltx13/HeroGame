@@ -65,9 +65,9 @@ public class Player {
 		
 		double slope = Math.atan((b.getY() - Yloc)/(b.getX() - Xloc));
 		if(b.getX() > Xloc)
-			g.drawLine(Xloc, Yloc, Xloc + (int)(Math.cos(slope) * (power.range*100)), Yloc + (int)(Math.sin(slope) * (power.range*100)));
-		else if(b.getX() > Xloc)
-			g.drawLine(Xloc, Yloc, Xloc + (int)(-1*Math.cos(slope) * (power.range*100)), Yloc + (int)(-1*Math.sin(slope)) * (power.range*100));
+			g.drawLine(Xloc, Yloc, (int)(Xloc + (Math.cos(slope) * (power.range*100))), (int)(Yloc + (Math.sin(slope)) * (power.range*100)));
+		else if(b.getX() < Xloc)
+			g.drawLine(Xloc, Yloc, (int)(Xloc + (-1*Math.cos(slope) * (power.range*100))), (int)(Yloc + (-1*Math.sin(slope)) * (power.range*100)));
 		else
 			if(b.getY() > Yloc)
 				g.drawLine(Xloc, Yloc, Xloc, Yloc + power.range*100);
