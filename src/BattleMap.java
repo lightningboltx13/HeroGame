@@ -433,31 +433,31 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			{
 				if(blast.direction.equals("right"))
 				{
-					blast.LocX += Math.cos(blast.Slope)*5;
-					blast.LocY += Math.sin(blast.Slope)*5;
+					blast.locationX += Math.cos(blast.slope)*5;
+					blast.locationY += Math.sin(blast.slope)*5;
 				}
 				else if(blast.direction.equals("left"))
 				{
-					blast.LocX -= Math.cos(blast.Slope)*5;
-					blast.LocY -= Math.sin(blast.Slope)*5;
+					blast.locationX -= Math.cos(blast.slope)*5;
+					blast.locationY -= Math.sin(blast.slope)*5;
 				}
 				else if(blast.direction.equals("up"))
 				{
-					blast.LocY -= 5;
+					blast.locationY -= 5;
 				}
 				else if(blast.direction.equals("down"))
 				{
-					blast.LocY += 5;
+					blast.locationY += 5;
 				}
 				
 				if(boss.fighting)
 				{
 					//collision detection
-					double blastDis = Math.sqrt(Math.pow(boss.getLocationX() - blast.LocX, 2) + Math.pow(boss.getLocationY() - blast.LocY, 2));
+					double blastDis = Math.sqrt(Math.pow(boss.getLocationX() - blast.locationX, 2) + Math.pow(boss.getLocationY() - blast.locationY, 2));
 					if(blastDis <= 10)
 					{
 						blast.hit = true;
-						boss.loseHealth(blast.Dmg);
+						boss.loseHealth(blast.damage);
 						bossEffectStat(powerSet[powerIndex].effect, boss);
 					}
 				}
@@ -465,21 +465,21 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				{
 					for(int a = 0; a < minions.length; a++)
 					{
-						double blastDis = Math.sqrt(Math.pow(minions[a].getLocationX() - blast.LocX, 2) + Math.pow(minions[a].getLocationY() - blast.LocY, 2));
+						double blastDis = Math.sqrt(Math.pow(minions[a].getLocationX() - blast.locationX, 2) + Math.pow(minions[a].getLocationY() - blast.locationY, 2));
 						if(blastDis <= 5)
 						{
 							blast.hit = true;
-							minions[a].loseHealth(blast.Dmg);
+							minions[a].loseHealth(blast.damage);
 							applyHeroEffectToMinion(blast.effect, minions[a]);
 						}
 					}
 				}
 				
 				double temp1, temp2;
-				temp1 = Math.pow(blast.LocX - blast.srtX, 2);
-				temp2 = Math.pow(blast.LocY - blast.srtY, 2);
+				temp1 = Math.pow(blast.locationX - blast.srtX, 2);
+				temp2 = Math.pow(blast.locationY - blast.srtY, 2);
 				double travled = Math.sqrt(temp1 + temp2);
-				if(travled >= blast.Range*50)
+				if(travled >= blast.range*50)
 					blast.hit = true;
 			}
 			

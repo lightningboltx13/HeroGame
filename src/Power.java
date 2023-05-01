@@ -10,4 +10,13 @@ public class Power {
 	int range;
 	int cost;
 	Color color;
+	
+	
+	@Override
+	public String toString() {
+		return "Power [name=" + name + ", effect=" + effect + ", shape=" + shape + ", damage=" + damage + ", range="
+				+ range + ", cost=" + cost + ", color=" + color + "]";
+	}
+	
+	
 }
