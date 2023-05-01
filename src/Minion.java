@@ -92,16 +92,16 @@ public class Minion implements Enemy
 	
 	public void draw(Graphics g, int heroX, int heroY, Minion minion)
 	{
-		xPoints[0] = (int)minion.locationX;
-		yPoints[0] = (int)minion.locationY;
+		xPoints[0] = (int)minion.getLocationX();
+		yPoints[0] = (int)minion.getLocationY();
 		
-		if(minion.locationX == heroX)
+		if(minion.getLocationX() == heroX)
 		{
 			if(minion.length == 0)
 			{
 				xPoints[1] = (int)locationX+7;
 				xPoints[2] = (int)locationX-7;
-				if(minion.locationY > heroY)
+				if(minion.getLocationY() > heroY)
 				{
 					yPoints[1] = (int)locationY+7;
 					yPoints[2] = (int)locationY+7;
@@ -116,7 +116,7 @@ public class Minion implements Enemy
 			{
 				xPoints[1] = (int)((1/minion.length)*15)+ (int)locationX;
 				xPoints[2] = (int)locationX - (int)((1/minion.length)*15);
-				if(minion.locationY > heroY)
+				if(minion.getLocationY() > heroY)
 				{
 					yPoints[1] = (int)(minion.length*15)+ (int)locationY;
 					yPoints[2] = (int)(minion.length*15)+(int)locationY;
@@ -130,11 +130,11 @@ public class Minion implements Enemy
 		}
 		else
 		{
-			double slope = Math.atan((double)(heroY- minion.locationY)/(heroX - minion.locationX));
-			double wingSlope = Math.atan((double)-(heroX- minion.locationX)/(heroY - minion.locationY));
+			double slope = Math.atan((double)(heroY- minion.getLocationY())/(heroX - minion.getLocationX()));
+			double wingSlope = Math.atan((double)-(heroX- minion.getLocationX())/(heroY - minion.getLocationY()));
 			
 			int dir = 1;
-			if(minion.locationX < heroX)
+			if(minion.getLocationX() < heroX)
 				dir = -1;
 			if(minion.length == 0)
 			{
