@@ -338,8 +338,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		
 		try
 		{
-			for(int i = 0; i < tempArray.length; i++)
-				if(tempArray[i].getHealth() > 0)
+			for(Minion tMinion : tempArray)
+				if(tMinion.getHealth() > 0)
 					lifeCount++;
 		}catch (NullPointerException ex){}
 		
