@@ -18,11 +18,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	String mode;
 	int world;
 	
-	//int HeroEnergy = 100;
 	int regen = 0;
 	boolean HeroPosition = false;
 	int HeroLocX = 640, HeroLocY = 480;
-	//String HeroStatus = ".none";
 	Player drawer = new Player();
 	
 	boolean gameEnd = false;
