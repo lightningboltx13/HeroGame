@@ -22,7 +22,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	int regen = 0;
 	boolean HeroPosition = false;
 	int HeroLocX = 640, HeroLocY = 480;
-	String HeroStatus = ".none";
+	//String HeroStatus = ".none";
 	Player drawer = new Player();
 	
 	boolean gameEnd = false;
@@ -70,20 +70,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			update(getGraphics());
 			
 			boolean statusRead = true;
-			String heroStatus = "";
-			int duration = 0;
-			for(int i = 0; i < HeroStatus.length(); i++)
-			{
-				if(HeroStatus.charAt(i) == '.')
-					statusRead = false;
-				else if(statusRead)
-					duration = (duration * 10) + Integer.parseInt(HeroStatus.charAt(i) + "");
-				else if(!statusRead)
-					heroStatus = heroStatus + HeroStatus.charAt(i);
-			}
-			
+			String heroStatus = drawer.getStatusText();
+			int duration = drawer.getDuration();
 			
 			int speed = 5;
+			//TODO: Maybe move this to the player class? idk
 			speed = checkHeroStatus(speed, duration, heroStatus);
 			
 			
@@ -96,6 +87,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			if(right)
 				HeroLocX += speed;
 			
+			//TODO: Modify to use values from class instead of passing them in.
 			drawer.drawHero(getGraphics(), HeroLocX, HeroLocY, HeroPosition, heroStatus);
 			
 			HeroPosition = false;
@@ -189,11 +181,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					if(Math.sqrt(temp1 + temp2) <=75)
 					{
 						int damage = boss.getDamage();
-						if(heroStatus.contains(".defend"))
+						if(drawer.getStatus().contains(".defend"))
 							damage /= 2;
 						drawer.loseHealth(damage);
 						
-						if(HeroStatus.equals(".none"))
+						if(drawer.getStatus().equals(".none"))
 							if(boss.getEffect().equals("20.knockback"))
 							{
 								if(HeroLocX > boss.getLocationX())
@@ -215,7 +207,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 								}
 							}
 							else
-								HeroStatus = boss.getEffect();
+								drawer.setStatus(boss.getEffect());
 						boss.attack = 150;
 					}
 				}
@@ -323,10 +315,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		if(duration > 0)
 		{
 			duration--;
-			HeroStatus = duration + "." + heroStatus;
+			drawer.setStatus(duration + "." + heroStatus);
 		}
 		if(duration == 0)
-			HeroStatus = ".none"; 
+			drawer.setStatus(".none"); 
 			//TODO: if stacking statuses need to modify to not remove all statuses here.
 
 		return speed;
@@ -593,8 +585,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			damage /= 2;
 		drawer.loseHealth(damage);
 		minion.setHealth(0);
-		if(HeroStatus.equals(".none") && !minion.getEffect().contains("immunity"))
-			HeroStatus = minion.getEffect();
+		if(drawer.getStatus().equals(".none") && !minion.getEffect().contains("immunity"))
+			drawer.setStatus(minion.getEffect());
 	}
 	
 	public void keyPressed(KeyEvent e)
@@ -757,12 +749,12 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		
 		else if(power.contains("boost"))
 		{
-			HeroStatus = "30.boost";
+			drawer.setStatus("30.boost");
 		}
 		
 		else if(power.contains("defend"))
 		{
-			HeroStatus = powerSet[powerIndex].effect;
+			drawer.setStatus(powerSet[powerIndex].effect);
 		}else {
 			System.err.println("Unknown Hero Power: " + power);
 		}
@@ -962,11 +954,13 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		tempArray[blasts.length] = tempBlast;
 		blasts = tempArray;
 	}
-			
+	
+	//TODO: Combine apply boss and minion methods they are practically identical
 	public void applyHeroEffectToMinion(String effect, Minion minion)
 	{
 		if(!minion.getStatus().equals(".immunity"))
 		{
+			//TODO: Prettify
 			boolean statusRead = true;
 			String heroStatus = "";
 			int duration = 0;
@@ -1013,6 +1007,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		boolean statusRead = true;
 		String status = "";
 		int duration = 0;
+		//TODO: Prettify
 		for(int i = 0; i < effect.length(); i++)
 		{
 			if(effect.charAt(i) == '.')

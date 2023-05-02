@@ -10,6 +10,7 @@ public class Player {
 	private int energy=100;
 	private int health=100;
 	private int regen=0;
+	private int speed;
 	private boolean HeroPosition = false;
 	private int HeroLocX = 640;
 	private int HeroLocY = 480;
@@ -129,7 +130,22 @@ public class Player {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
+	
+	public String getStatusText() {
+		int index = this.status.indexOf(".");
+		if(index > 0){
+		return this.status.substring(index  + 1, this.status.length());
+		}
+		return this.status;
+	}
+	
+	public int getDuration() {
+		int index = this.status.indexOf(".");
+		if(index > 0){
+			return Integer.parseInt(this.status.substring(0, index));
+		}
+		return 0;
+	}
 	public int getEnergy() {
 		return energy;
 	}
