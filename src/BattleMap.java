@@ -20,7 +20,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	
 	int regen = 0;
 	boolean HeroPosition = false;
-	int HeroLocX = 640, HeroLocY = 480;
+	//int HeroLocX = 640, 
+			int HeroLocY = 480;
 	Player drawer = new Player();
 	
 	boolean gameEnd = false;
@@ -81,12 +82,12 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			if(down)
 				HeroLocY += speed;
 			if(left)
-				HeroLocX -= speed;
+				drawer.setLocationX(drawer.getLocationX() - speed);
 			if(right)
-				HeroLocX += speed;
+				drawer.setLocationX(drawer.getLocationX() + speed);
 			
 			//TODO: Modify to use values from class instead of passing them in.
-			drawer.drawHero(getGraphics(), HeroLocX, HeroLocY, HeroPosition, heroStatus);
+			drawer.drawHero(getGraphics(), drawer.getLocationX(), HeroLocY, HeroPosition, heroStatus);
 			
 			HeroPosition = false;
 			
@@ -116,10 +117,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				if(boss.attack <= 0)
 				{
 					//boss runs at hero till he hits him with his area attack.
-					if(!(boss.getLocationX() == HeroLocX))
+					//TODO: Why not just make it != instead of complicating it with the !(x==y)?
+					if(!(boss.getLocationX() == drawer.getLocationX()))
 					{
-						boss.tempSlope = Math.atan((boss.getLocationY() - HeroLocY)/(boss.getLocationX() - HeroLocX));
-						if(HeroLocX < boss.getLocationX())
+						boss.tempSlope = Math.atan((boss.getLocationY() - HeroLocY)/(boss.getLocationX() - drawer.getLocationX()));
+						if(drawer.getLocationX() < boss.getLocationX())
 							Bright = false;
 						else
 							Bright = true;
@@ -174,7 +176,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				{
 					boss.drawArea(getGraphics(), boss.getLocationX(), boss.getLocationY(), boss);
 					double temp1, temp2;
-					temp1 = Math.pow(boss.getLocationX() - HeroLocX, 2);
+					temp1 = Math.pow(boss.getLocationX() - drawer.getLocationX(), 2);
 					temp2 = Math.pow(boss.getLocationY() - HeroLocY, 2);
 					if(Math.sqrt(temp1 + temp2) <=75)
 					{
@@ -186,14 +188,16 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						if(drawer.getStatus().equals(".none"))
 							if(boss.getEffect().equals("20.knockback"))
 							{
-								if(HeroLocX > boss.getLocationX())
-								{
-									HeroLocX += Math.cos(boss.tempSlope)*200;
+								if(drawer.getLocationX() > boss.getLocationX())
+								{	
+									//TODO once you change to double remove type-casting here
+									drawer.setLocationX((int)(drawer.getLocationX() + Math.cos(boss.tempSlope)*200));
 									HeroLocY += Math.sin(boss.tempSlope)*200;
 								}
-								else if(HeroLocX < boss.getLocationX())
+								else if(drawer.getLocationX() < boss.getLocationX())
 								{
-									HeroLocX -= Math.cos(boss.tempSlope)*200;
+									//TODO once you change to double remove type-casting here
+									drawer.setLocationX((int)(drawer.getLocationX() - Math.cos(boss.tempSlope)*200));
 									HeroLocY -= Math.sin(boss.tempSlope)*200;
 								}
 								else
@@ -226,7 +230,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					boss.setStatus(".none");
 				
 				//boss drawer
-				boss.draw(getGraphics(), HeroLocX, HeroLocY, boss);
+				boss.draw(getGraphics(), drawer.getLocationX(), HeroLocY, boss);
 				boss.drawBars(getGraphics(), boss);
 			}
 			
@@ -390,7 +394,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					else
 						minion.setStatus(Eduration + "." + Estatus);
 				}
-				if(minion.getLocationX() == HeroLocX)
+				if(minion.getLocationX() == drawer.getLocationX())
 				{
 					if(minion.getLocationY() > HeroLocY)
 						minion.addLocationY(-(minionSpeed));
@@ -401,19 +405,19 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				else
 				{
 					int dir = 1;
-					if(minion.getLocationX() > HeroLocX)
+					if(minion.getLocationX() > drawer.getLocationX())
 						dir = -1;
 					minion.addLocationX(dir*(Math.cos(minion.slope)*minionSpeed));
 					minion.addLocationY(dir*(Math.sin(minion.slope)*minionSpeed));
 				}
 				
 				double temp1, temp2;
-				temp1 = Math.pow(minion.getLocationX() - HeroLocX,2);
+				temp1 = Math.pow(minion.getLocationX() - drawer.getLocationX(),2);
 				temp2 = Math.pow(minion.getLocationY() - HeroLocY,2);
 				if(Math.sqrt(temp1 + temp2) <= 10)
 					minionHit(minion, status);
 				
-				minion.draw(getGraphics(), HeroLocX, HeroLocY, minion);
+				minion.draw(getGraphics(), drawer.getLocationX(), HeroLocY, minion);
 			}
 		}catch (NullPointerException ex){}
 	}
@@ -666,29 +670,29 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	}
 	
 	public void doMelee(int mouseX, int mouseY) {
-		drawer.drawMelee(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
-		double slope = Math.atan((double)(mouseY - HeroLocY)/(double)(mouseX - HeroLocX));
+		drawer.drawMelee(getGraphics(), drawer.getLocationX(), HeroLocY, powerSet[powerIndex]);
+		double slope = Math.atan((double)(mouseY - HeroLocY)/(double)(mouseX - drawer.getLocationX()));
 		
 		int fistX, fistY;
-		if(mouseX > HeroLocX)
+		if(mouseX > drawer.getLocationX())
 		{
-			fistX = HeroLocX + (int)(Math.cos(slope)*25);
+			fistX = drawer.getLocationX() + (int)(Math.cos(slope)*25);
 			fistY = HeroLocY + (int)(Math.sin(slope)*25);
 		}
-		else if(mouseX< HeroLocX)
+		else if(mouseX< drawer.getLocationX())
 		{
-			fistX = HeroLocX - (int)(Math.cos(slope)*25);
+			fistX = drawer.getLocationX() - (int)(Math.cos(slope)*25);
 			fistY = HeroLocY - (int)(Math.sin(slope)*25);
 		}
 		else
 			if(mouseY > HeroLocY)
 			{
-				fistX = HeroLocX;
+				fistX = drawer.getLocationX();
 				fistY = HeroLocY + 25;
 			}
 			else
 			{
-				fistX = HeroLocX;
+				fistX = drawer.getLocationX();
 				fistY = HeroLocY - 25;
 			}
 
@@ -731,7 +735,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		
 		if(power.contains("mine"))
 		{
-			Mine tempMine = new Mine(HeroLocX, HeroLocY);
+			Mine tempMine = new Mine(drawer.getLocationX(), HeroLocY);
 			Mine[] tempArray = new Mine[mines.length + 1];
 			for(int i = 0; i < mines.length; i++)
 				tempArray[i] = mines[i];
@@ -741,7 +745,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		
 		else if(power.contains("tele"))
 		{
-			HeroLocX = mouseX;
+			drawer.setLocationX(mouseX);
 			HeroLocY = mouseY;
 		}
 		
@@ -759,11 +763,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	}
 	
 	public void doArea() {
-		drawer.drawArea(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
+		drawer.drawArea(getGraphics(), drawer.getLocationX(), HeroLocY, powerSet[powerIndex]);
 		double temp1, temp2;
 		if(boss.fighting)
 		{
-			temp1 = Math.pow(boss.getLocationX() - HeroLocX,  2);
+			temp1 = Math.pow(boss.getLocationX() - drawer.getLocationX(),  2);
 			temp2 = Math.pow(boss.getLocationY() - HeroLocY,  2);
 			if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].range*50)
 			{
@@ -775,7 +779,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		{
 			for(Minion minion : minions)
 			{
-				temp1 = Math.pow(minion.getLocationX() - HeroLocX,  2);
+				temp1 = Math.pow(minion.getLocationX() - drawer.getLocationX(),  2);
 				temp2 = Math.pow(minion.getLocationY() - HeroLocY,  2);
 				if(Math.sqrt(temp1 + temp2) <= powerSet[powerIndex].range*50)
 				{
@@ -787,7 +791,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	}
 	
 	public void doBeam(int mouseX, int mouseY) {
-		double slope = drawer.drawBeam(getGraphics(), HeroLocX, HeroLocY, powerSet[powerIndex]);
+		double slope = drawer.drawBeam(getGraphics(), drawer.getLocationX(), HeroLocY, powerSet[powerIndex]);
 		System.out.println("Beam slope:" + slope);
 		
 		//TODO: should be able to clean this code up a lot. This should interact with Enemies and not minions and boss separately.
@@ -796,17 +800,17 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		if(boss.fighting)
 		{
 			double Eslope1, Eslope2, distance;
-			distance = Math.sqrt(Math.pow(boss.getLocationY() - HeroLocY, 2) + Math.pow(boss.getLocationX() - HeroLocX, 2));
+			distance = Math.sqrt(Math.pow(boss.getLocationY() - HeroLocY, 2) + Math.pow(boss.getLocationX() - drawer.getLocationX(), 2));
 			
 			if(distance <= powerSet[powerIndex].range*100)
 			{
 				if(mouseY > HeroLocY)
 				{
-					Eslope1 = Math.atan((boss.yPoints[1] - HeroLocY)/(boss.xPoints[1] - HeroLocX));
-					Eslope2 = Math.atan((boss.yPoints[3] - HeroLocY)/(boss.xPoints[3] - HeroLocX));
+					Eslope1 = Math.atan((boss.yPoints[1] - HeroLocY)/(boss.xPoints[1] - drawer.getLocationX()));
+					Eslope2 = Math.atan((boss.yPoints[3] - HeroLocY)/(boss.xPoints[3] - drawer.getLocationX()));
 					
 					//right
-					if(mouseX > HeroLocX && boss.getLocationX() > HeroLocX)
+					if(mouseX > drawer.getLocationX() && boss.getLocationX() > drawer.getLocationX())
 					{
 						if(Eslope1 <= slope && Eslope2 >= slope)
 						{
@@ -815,7 +819,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						}
 					}
 					//left
-					else if(mouseX < HeroLocX && boss.getLocationX() < HeroLocX)
+					else if(mouseX < drawer.getLocationX() && boss.getLocationX() < drawer.getLocationX())
 					{
 						if(Eslope1 >= slope && Eslope2 <= slope)
 						{
@@ -829,11 +833,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				}
 				else
 				{
-					Eslope1 = Math.atan((HeroLocY - boss.yPoints[1])/(HeroLocX - boss.xPoints[1]));
-					Eslope2 = Math.atan((HeroLocY - boss.yPoints[3])/(HeroLocX - boss.xPoints[3]));
+					Eslope1 = Math.atan((HeroLocY - boss.yPoints[1])/(drawer.getLocationX() - boss.xPoints[1]));
+					Eslope2 = Math.atan((HeroLocY - boss.yPoints[3])/(drawer.getLocationX() - boss.xPoints[3]));
 					
 					//right
-					if(mouseX> HeroLocX && boss.getLocationX() > HeroLocX)
+					if(mouseX> drawer.getLocationX() && boss.getLocationX() > drawer.getLocationX())
 					{
 						if(Eslope1 >= slope && Eslope2 <= slope)
 						{
@@ -842,7 +846,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						}
 					}
 					//left
-					else if(mouseX < HeroLocX && boss.getLocationX() < HeroLocX)
+					else if(mouseX < drawer.getLocationX() && boss.getLocationX() < drawer.getLocationX())
 					{
 						if(Eslope1 <= slope && Eslope2 >= slope)
 						{
@@ -861,17 +865,17 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			double Eslope1, Eslope2, distance;
 			for(Minion minion : minions)
 			{
-				distance = Math.sqrt(Math.pow(minion.getLocationY() - HeroLocY, 2) + Math.pow(minion.getLocationX() - HeroLocX, 2));
+				distance = Math.sqrt(Math.pow(minion.getLocationY() - HeroLocY, 2) + Math.pow(minion.getLocationX() - drawer.getLocationX(), 2));
 				
 				if(distance <= powerSet[powerIndex].range*100)
 				{
 					if(mouseY > HeroLocY)
 					{
-						Eslope1 = Math.atan((minion.yPoints[1] - HeroLocY)/(minion.xPoints[1] - HeroLocX));
-						Eslope2 = Math.atan((minion.yPoints[2] - HeroLocY)/(minion.xPoints[2] - HeroLocX));
+						Eslope1 = Math.atan((minion.yPoints[1] - HeroLocY)/(minion.xPoints[1] - drawer.getLocationX()));
+						Eslope2 = Math.atan((minion.yPoints[2] - HeroLocY)/(minion.xPoints[2] - drawer.getLocationX()));
 						
 						//right
-						if(mouseX > HeroLocX && minion.getLocationX() > HeroLocX)
+						if(mouseX > drawer.getLocationX() && minion.getLocationX() > drawer.getLocationX())
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
@@ -880,7 +884,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 							}
 						}
 						//left
-						if(mouseX < HeroLocX && boss.getLocationX() < HeroLocX)
+						if(mouseX < drawer.getLocationX() && boss.getLocationX() < drawer.getLocationX())
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
@@ -895,11 +899,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 					}
 					else
 					{
-						Eslope1 = Math.atan((HeroLocY - minion.yPoints[1])/(HeroLocX - minion.xPoints[1]));
-						Eslope2 = Math.atan((HeroLocY - minion.yPoints[2])/(HeroLocX - minion.xPoints[2]));
+						Eslope1 = Math.atan((HeroLocY - minion.yPoints[1])/(drawer.getLocationX() - minion.xPoints[1]));
+						Eslope2 = Math.atan((HeroLocY - minion.yPoints[2])/(drawer.getLocationX() - minion.xPoints[2]));
 						
 						//right
-						if(mouseX > HeroLocX && minion.getLocationX() > HeroLocX)
+						if(mouseX > drawer.getLocationX() && minion.getLocationX() > drawer.getLocationX())
 						{
 							if(Eslope1 >= slope && Eslope2 <= slope)
 							{
@@ -908,7 +912,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 							}
 						}
 						//left
-						else if(mouseX < HeroLocX && minion.getLocationX() < HeroLocX)
+						else if(mouseX < drawer.getLocationX() && minion.getLocationX() < drawer.getLocationX())
 						{
 							if(Eslope1 <= slope && Eslope2 >= slope)
 							{
@@ -927,16 +931,16 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	}
 	
 	public void doBlast(int mouseX, int mouseY) {
-		double slope = Math.atan((double)(mouseY - HeroLocY)/(double)(mouseX - HeroLocX));
+		double slope = Math.atan((double)(mouseY - HeroLocY)/(double)(mouseX - drawer.getLocationX()));
 		String dir = "";
-		if(mouseX > HeroLocX) {
+		if(mouseX > drawer.getLocationX()) {
 			dir = "right";
-			System.out.println("SHOOTING RIGHT: HeroLocX: " + HeroLocX + " Mouse LocX: " + mouseX);
-		}else if(mouseX < HeroLocX) {
+			System.out.println("SHOOTING RIGHT: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
+		}else if(mouseX < drawer.getLocationX()) {
 			dir = "left";
-			System.out.println("SHOOTING LEFT: HeroLocX: " + HeroLocX + " Mouse LocX: " + mouseX);
+			System.out.println("SHOOTING LEFT: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
 		}else { //equal (meaning center)
-			System.out.println("SHOOTING EQUAL: HeroLocX: " + HeroLocX + " Mouse LocX: " + mouseX);
+			System.out.println("SHOOTING EQUAL: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
 			if(mouseY > HeroLocY) {
 				dir = "down";
 				System.out.println("SHOOTING DOWN: HeroLocY: " + HeroLocY + " Mouse LocY: " + mouseY);
@@ -945,7 +949,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				System.out.println("SHOOTING UP: HeroLocY: " + HeroLocY + " Mouse LocY: " + mouseY);
 			}
 		}
-		Blast tempBlast = new Blast(slope, dir, powerSet[powerIndex].damage, powerSet[powerIndex].range, HeroLocX, HeroLocY, powerSet[powerIndex].color, powerSet[powerIndex].effect);
+		Blast tempBlast = new Blast(slope, dir, powerSet[powerIndex].damage, powerSet[powerIndex].range, drawer.getLocationX(), HeroLocY, powerSet[powerIndex].color, powerSet[powerIndex].effect);
 		Blast[] tempArray = new Blast[blasts.length + 1];
 		for(int i = 0; i < blasts.length; i++)
 			tempArray[i] = blasts[i];
@@ -974,18 +978,18 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			if(heroStatus.equals("knock"))
 			{
 	
-				double slope = Math.atan((double)(HeroLocY - minion.getLocationY())/(double)(HeroLocX - minion.getLocationX()));
-				if(minion.getLocationX() > HeroLocX)
+				double slope = Math.atan((double)(HeroLocY - minion.getLocationY())/(double)(drawer.getLocationX() - minion.getLocationX()));
+				if(minion.getLocationX() > drawer.getLocationX())
 				{
 					minion.addLocationX(Math.cos(slope)*duration);
 					minion.addLocationY(Math.sin(slope)*duration);
 				}
-				if(minion.getLocationX() < HeroLocX)
+				if(minion.getLocationX() < drawer.getLocationX())
 				{
 					minion.addLocationX(-(Math.cos(slope)*duration));
 					minion.addLocationY(-(Math.sin(slope)*duration));
 				}
-				if(minion.getLocationX() == HeroLocX)
+				if(minion.getLocationX() == drawer.getLocationX())
 				{
 					if(minion.getLocationY() > HeroLocY)
 						minion.addLocationY(Math.sin(slope)*duration);
@@ -1018,18 +1022,18 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		if(status.equals("knock"))
 		{
 
-			double slope = Math.atan((double)(HeroLocY - boss.getLocationY())/(double)(HeroLocX - boss.getLocationX()));
-			if(boss.getLocationX() > HeroLocX)
+			double slope = Math.atan((double)(HeroLocY - boss.getLocationY())/(double)(drawer.getLocationX() - boss.getLocationX()));
+			if(boss.getLocationX() > drawer.getLocationX())
 			{
 				boss.addLocationX(Math.cos(slope)*duration);
 				boss.addLocationY(Math.sin(slope)*duration);
 			}
-			if(boss.getLocationX() < HeroLocX)
+			if(boss.getLocationX() < drawer.getLocationX())
 			{
 				boss.addLocationX(-(Math.cos(slope)*duration));
 				boss.addLocationY(-(Math.sin(slope)*duration));
 			}
-			if(boss.getLocationX() == HeroLocX)
+			if(boss.getLocationX() == drawer.getLocationX())
 			{
 				if(boss.getLocationY() > HeroLocY)
 					boss.addLocationY(Math.sin(slope)*duration);

@@ -12,7 +12,9 @@ public class Player {
 	private int regen=0;
 	private int speed;
 	private boolean HeroPosition = false;
-	private int HeroLocX = 640;
+	
+	//TODO: Change to double
+	private int locationX = 640;
 	private int HeroLocY = 480;
 	
 
@@ -173,6 +175,16 @@ public class Player {
 	public void setRegen(int regen) {
 		this.regen = regen;
 	}
+
+	public int getLocationX() {
+		return locationX;
+	}
+
+	public void setLocationX(int locationX) {
+		this.locationX = locationX;
+	}
+	
+	
 	
 	
 	
