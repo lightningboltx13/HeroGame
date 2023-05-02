@@ -67,7 +67,6 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		{
 			update(getGraphics());
 			
-			boolean statusRead = true;
 			String heroStatus = drawer.getStatusText();
 			int duration = drawer.getDuration();
 			
