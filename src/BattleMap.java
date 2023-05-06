@@ -521,44 +521,20 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	public void attackWithMines() {
 		if(mines.length > 0)
 		{
-			int mineCount = 0;
-			double mine1, mine2;
-			
+			System.out.println("Attacking with mines[" + mines.length + "]!!");
+			int mineCount = 0;			
 			if(!boss.fighting)
 			{
 				for(Minion minion: minions)
 				{
 					try{
-						for(Mine mine: mines)
-						{
-							//enemies is null!!!
-							mine1 = Math.pow(minion.getLocationX() - mine.locX, 2);
-							mine2 = Math.pow(minion.getLocationY() - mine.locY, 2);
-							if(Math.sqrt(mine1 + mine2) <= 10)
-							{
-								minion.loseHealth(10);
-								mine.exploded = true;
-							}
-							else
-								mineCount++;
-						}
+						mineCount = mineHit(mineCount, minion);
 					}catch (NullPointerException ex){}
 				}
 			}
 			else
 			{
-				for(Mine mine: mines)
-				{
-					mine1 = Math.pow(boss.getLocationX() - mine.locX, 2);
-					mine2 = Math.pow(boss.getLocationY() - mine.locY, 2);
-					if(Math.sqrt(mine1 + mine2) <= 10)
-					{
-						boss.loseHealth(10);
-						mine.exploded = true;
-					}
-					else
-						mineCount++;
-				}
+				mineCount = mineHit(mineCount, boss);
 			}
 			Mine[] tempArray = new Mine[mineCount];
 			int tempCount = 0;
@@ -585,6 +561,25 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				mine.drawMine(getGraphics(),  mine);
 		}catch (NullPointerException ex){}
 		
+	}
+	
+	public int mineHit(int mineCount, Enemy enemy) {
+		System.out.println("Starting mine count: " + mineCount);
+		for(Mine mine: mines)
+		{
+			//enemies is null!!!
+			double mine1 = Math.pow(enemy.getLocationX() - mine.locX, 2);
+			double mine2 = Math.pow(enemy.getLocationY() - mine.locY, 2);
+			if(Math.sqrt(mine1 + mine2) <= 10)
+			{
+				enemy.loseHealth(10);
+				mine.exploded = true;
+			}
+			else
+				mineCount++;
+		}
+		System.out.println("Returning mine count: " + mineCount);
+		return mineCount;
 	}
 
 	public void close()
