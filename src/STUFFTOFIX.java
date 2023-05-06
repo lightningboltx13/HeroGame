@@ -36,6 +36,8 @@
  * -Add in jUNITS for easy automated testing
  * 
  * -javadocs
+ * 
+ * -see if we can put health percentages in the bars? might not be possible
  */
 public class STUFFTOFIX {
 

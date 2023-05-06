@@ -6,6 +6,17 @@ import java.awt.PointerInfo;
 
 public class Player {
 	//enhance to store data in properties like enemies
+	private String status = ".none";
+	private int energy=100;
+	private int health=100;
+	private int regen=0;
+	private int speed;
+	private boolean HeroPosition = false;
+	
+	//TODO: Change to double
+	private int locationX = 640;
+	private int locationY = 480;
+	
 
 	public Player(){}
 	
@@ -113,4 +124,77 @@ public class Player {
 		g.drawString(test,  450,  65);
 
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getStatusText() {
+		int index = this.status.indexOf(".");
+		if(index > 0){
+		return this.status.substring(index  + 1, this.status.length());
+		}
+		return this.status;
+	}
+	
+	public int getDuration() {
+		int index = this.status.indexOf(".");
+		if(index > 0){
+			return Integer.parseInt(this.status.substring(0, index));
+		}
+		return 0;
+	}
+	public int getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(int energy) {
+		this.energy = energy;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
+	
+	public void loseHealth(int damageDone) {
+		this.health = this.health - damageDone ;
+	}
+
+	public int getRegen() {
+		return regen;
+	}
+
+	public void setRegen(int regen) {
+		this.regen = regen;
+	}
+
+	public int getLocationX() {
+		return locationX;
+	}
+
+	public void setLocationX(int locationX) {
+		this.locationX = locationX;
+	}
+
+	public int getLocationY() {
+		return locationY;
+	}
+
+	public void setLocationY(int locationY) {
+		this.locationY = locationY;
+	}
+	
+	
+	
+	
+	
+	
 }
