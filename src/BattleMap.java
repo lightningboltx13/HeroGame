@@ -71,9 +71,13 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			int duration = drawer.getDuration();
 			
 			int speed = 5;
+			System.out.println("1-Hero Status Text is: " + heroStatus );
+			System.out.println("1-Full Hero Status: " + drawer.getStatus());
 			//TODO: Maybe move this to the player class? idk
 			speed = checkHeroStatus(speed, duration, heroStatus);
 			
+			System.out.println("2-Hero Status Text is: " + heroStatus );
+			System.out.println("2-Full Hero Status: " + drawer.getStatus());
 			
 			if(up)
 				drawer.setLocationY(drawer.getLocationY() - speed);
@@ -842,7 +846,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						}
 					}
 					else {
-						System.out.println("[BEAM]- Y+ -BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
+						//System.out.println("[BEAM]- Y+ -BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
 					}
 				}
 				else
@@ -875,7 +879,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						}
 					}
 					else {
-						System.out.println("[BEAM]- Y- -BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
+						//System.out.println("[BEAM]- Y- -BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
 					}
 				}
 			}
@@ -922,7 +926,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
 						else {
-							System.out.println("[BEAM] - Y+ - NOT--BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
+							//System.out.println("[BEAM] - Y+ - NOT--BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
 						}
 					}
 					else
@@ -956,7 +960,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 						}
 						//TODO: what happens when they're equal? can they ever be equal? 
 						else {
-							System.out.println("[BEAM] - Y- - NOT--BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
+							//System.out.println("[BEAM] - Y- - NOT--BOSS FIGHTING -- HERO LOC AND MOUSE ARE EQUAL");
 						}
 					}
 				}
@@ -969,18 +973,18 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		String dir = "";
 		if(mouseX > drawer.getLocationX()) {
 			dir = "right";
-			System.out.println("SHOOTING RIGHT: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
+			//System.out.println("SHOOTING RIGHT: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
 		}else if(mouseX < drawer.getLocationX()) {
 			dir = "left";
-			System.out.println("SHOOTING LEFT: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
+			//System.out.println("SHOOTING LEFT: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
 		}else { //equal (meaning center)
-			System.out.println("SHOOTING EQUAL: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
+			//System.out.println("SHOOTING EQUAL: HeroLocX: " + drawer.getLocationX() + " Mouse LocX: " + mouseX);
 			if(mouseY > drawer.getLocationY()) {
 				dir = "down";
-				System.out.println("SHOOTING DOWN: HeroLocY: " + drawer.getLocationY() + " Mouse LocY: " + mouseY);
+				//System.out.println("SHOOTING DOWN: HeroLocY: " + drawer.getLocationY() + " Mouse LocY: " + mouseY);
 			}else{
 				dir = "up";
-				System.out.println("SHOOTING UP: HeroLocY: " + drawer.getLocationY() + " Mouse LocY: " + mouseY);
+				//System.out.println("SHOOTING UP: HeroLocY: " + drawer.getLocationY() + " Mouse LocY: " + mouseY);
 			}
 		}
 		Blast tempBlast = 
