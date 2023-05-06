@@ -79,6 +79,9 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			statusRead = true;
 			hs1 = "";
 			duration = 0;
+			
+			System.out.println("1-Hero Status Text is: " + hs1 );
+			System.out.println("1-Full Hero Status: " + HeroStatus);
 			for(int i = 0; i < HeroStatus.length(); i++)
 			{
 				if(HeroStatus.charAt(i) == '.')
@@ -88,11 +91,13 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				else if(!statusRead)
 					hs1 = hs1 + HeroStatus.charAt(i);
 			}
-			
+			System.out.println("2-Hero Status Text is: " + hs1 );
+			System.out.println("2-Full Hero Status: " + HeroStatus);
 			
 			int speed = 5;
 			speed = checkHeroStatus(speed, duration, hs1);
-			
+			System.out.println("3-Hero Status Text is: " + hs1 );
+			System.out.println("3-Full Hero Status: " + HeroStatus);
 			
 			if(up)
 				HeroLocY -= speed;
