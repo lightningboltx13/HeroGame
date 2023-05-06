@@ -67,17 +67,14 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		{
 			update(getGraphics());
 			
-			String heroStatus = drawer.getStatusText();
-			int duration = drawer.getDuration();
 			
 			int speed = 5;
-			System.out.println("1-Hero Status Text is: " + heroStatus );
-			System.out.println("1-Full Hero Status: " + drawer.getStatus());
-			//TODO: Maybe move this to the player class? idk
-			speed = checkHeroStatus(speed, duration, heroStatus);
 			
-			System.out.println("2-Hero Status Text is: " + heroStatus );
-			System.out.println("2-Full Hero Status: " + drawer.getStatus());
+			//TODO: Maybe move this to the player class? idk
+			speed = checkHeroStatus(speed);
+
+			
+	
 			
 			if(up)
 				drawer.setLocationY(drawer.getLocationY() - speed);
@@ -89,7 +86,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				drawer.setLocationX(drawer.getLocationX() + speed);
 			
 			//TODO: Modify to use values from class instead of passing them in.
-			drawer.drawHero(getGraphics(), drawer.getLocationX(), drawer.getLocationY(), HeroPosition, heroStatus);
+			drawer.drawHero(getGraphics(), drawer.getLocationX(), drawer.getLocationY(), HeroPosition, drawer.getStatusText());
+
 			
 			HeroPosition = false;
 			
@@ -106,7 +104,8 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			
 			
 			//minion move, status updater
-			moveMinions(heroStatus);
+			moveMinions();
+
 			
 			
 			//attack with mines
@@ -221,17 +220,17 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				
 				//boss status
 				String bossStatus = boss.getStatusText();
-				duration = boss.getDuration();
+				int d1 = boss.getDuration();
 				
 				
-				if(duration > 0)
+				if(d1 > 0)
 				{
-					duration--;
+					d1--;
 					if(bossStatus.equals("hurt")) //TODO shouldn't this be related to damage?
 						boss.loseHealth(1);
-					boss.setStatus(duration + "." + bossStatus);
+					boss.setStatus(d1 + "." + bossStatus);
 				}
-				else if(duration == 0)
+				else if(d1 == 0)
 					boss.setStatus(".none");
 				
 				//boss drawer
@@ -239,14 +238,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				boss.drawBars(getGraphics(), boss);
 			}
 			
-			if(drawer.getEnergy() < 100)
-				regen++;
-			if(regen == 10)
-			{
-				drawer.setEnergy(drawer.getEnergy() + 1);
-				//HeroEnergy+=100;
-				regen = 0;
-			}
+			regenHealth();
 			
 			//draw health and energy bars
 			drawer.drawTest(getGraphics(), powerSet[powerIndex].name);
@@ -297,8 +289,22 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 //			update(getGraphics());
 		}
 	}
-	public int checkHeroStatus(int speed, int duration, String heroStatus) {
-		switch (heroStatus) {
+	
+	public void regenHealth() {
+		if(drawer.getEnergy() < 100)
+			regen++;
+		if(regen == 10)
+		{
+			drawer.setEnergy(drawer.getEnergy() + 1);
+			//HeroEnergy+=100;
+			regen = 0;
+		}
+	}
+	
+	public int checkHeroStatus(int speed) {
+		String hsval = drawer.getStatusText();
+		int dur = drawer.getDuration();
+		switch (hsval) {
 		case "boost":
 			speed = 10;
 			break;
@@ -316,15 +322,15 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			break;
 			//need to account for immunity and defend still?
 		default:
-			System.err.println("Unknown Hero Status in Momvement: " + heroStatus);
+			System.err.println("Unknown Hero Status in Momvement: " + hsval);
 		}
 		//Hero status
-		if(duration > 0)
+		if(dur > 0)
 		{
-			duration--;
-			drawer.setStatus(duration + "." + heroStatus);
+			dur--;
+			drawer.setStatus(dur + "." + hsval);
 		}
-		if(duration == 0)
+		if(dur == 0)
 			drawer.setStatus(".none"); 
 			//TODO: if stacking statuses need to modify to not remove all statuses here.
 
@@ -377,27 +383,27 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 			boss.fighting = true;
 	}
 	
-	public void moveMinions(String status) {
+	public void moveMinions() {
 		try{
 			for(Minion minion: minions)
 			{
-				String Estatus = minion.getStatusText();
-				int Eduration = minion.getDuration();
+				String mStatus = minion.getStatusText();
+				int mDuration = minion.getDuration();
 				
 				double minionSpeed = minion.getSpeed();
-				if(Estatus.contains("slow"))
+				if(mStatus.contains("slow"))
 					minionSpeed /= 2;
-				if(Estatus.contains("stun"))
+				if(mStatus.contains("stun"))
 					minionSpeed = 0;
-				if(Estatus.contains("hurt"))
+				if(mStatus.contains("hurt"))
 					minion.loseHealth(1);
-				if(!Estatus.contains("none") && !Estatus.contains("immunity"))
+				if(!mStatus.contains("none") && !mStatus.contains("immunity"))
 				{
-					Eduration--;
-					if(Eduration == 0)
+					mDuration--;
+					if(mDuration == 0)
 						minion.setStatus(".none");
 					else
-						minion.setStatus(Eduration + "." + Estatus);
+						minion.setStatus(mDuration + "." + mStatus);
 				}
 				if(minion.getLocationX() == drawer.getLocationX())
 				{
@@ -420,7 +426,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				temp1 = Math.pow(minion.getLocationX() - drawer.getLocationX(),2);
 				temp2 = Math.pow(minion.getLocationY() - drawer.getLocationY(),2);
 				if(Math.sqrt(temp1 + temp2) <= 10)
-					minionHit(minion, status);
+					minionHit(minion);
 				
 				minion.draw(getGraphics(), drawer.getLocationX(), drawer.getLocationY(), minion);
 			}
@@ -589,10 +595,10 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		this.hide();
 	}
 	
-	public void minionHit(Minion minion, String heroStatus)
+	public void minionHit(Minion minion)
 	{
 		int damage = minion.getDamage();
-		if(heroStatus.contains("defend"))
+		if(drawer.getStatusText().contains("defend"))
 			damage /= 2;
 		drawer.loseHealth(damage);
 		minion.setHealth(0);
