@@ -134,8 +134,13 @@ public class Player {
 	}
 	
 	public String getStatusText() {
+		System.out.println("Player StatusTextCalled: " + this.status);
 		int index = this.status.indexOf(".");
-		if(index > 0){
+		//get the RIGHT of the "." 
+		//even if the "." is the first character, 
+		//it will exclude it and any duration that proceeds it.
+		//returns -1 if there is no "."
+		if(index > -1){
 		return this.status.substring(index  + 1, this.status.length());
 		}
 		return this.status;
@@ -143,6 +148,8 @@ public class Player {
 	
 	public int getDuration() {
 		int index = this.status.indexOf(".");
+		//get the LEFT of the "." if "." is not the first char
+		//returns -1 if there is no "."
 		if(index > 0){
 			return Integer.parseInt(this.status.substring(0, index));
 		}

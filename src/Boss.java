@@ -181,8 +181,9 @@ public class Boss implements Enemy
 	}
 	@Override
 	public String getStatusText() {
+		System.out.println("Boss StatusTextCalled: " + this.status);
 		int index = this.status.indexOf(".");
-		if(index > 0){
+		if(index > -1){
 		return this.status.substring(index  + 1, this.status.length());
 		}
 		return this.status;
