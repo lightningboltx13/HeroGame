@@ -67,23 +67,22 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		{
 			update(getGraphics());
 			
-			
-			int speed = 5;
+			//set speed to 5, not sure why but replicating existing code
+			//TODO: Probably need to initialize to 5 and then keep it as that?
+			drawer.setSpeed(5);
 			
 			//TODO: Maybe move this to the player class? idk
-			speed = checkHeroStatus(speed);
-
-			
+			checkHeroStatus();
 	
 			
 			if(up)
-				drawer.setLocationY(drawer.getLocationY() - speed);
+				drawer.setLocationY(drawer.getLocationY() - drawer.getSpeed());
 			if(down)
-				drawer.setLocationY(drawer.getLocationY() + speed);
+				drawer.setLocationY(drawer.getLocationY() + drawer.getSpeed());
 			if(left)
-				drawer.setLocationX(drawer.getLocationX() - speed);
+				drawer.setLocationX(drawer.getLocationX() - drawer.getSpeed());
 			if(right)
-				drawer.setLocationX(drawer.getLocationX() + speed);
+				drawer.setLocationX(drawer.getLocationX() + drawer.getSpeed());
 			
 			//TODO: Modify to use values from class instead of passing them in.
 			drawer.drawHero(getGraphics(), drawer.getLocationX(), drawer.getLocationY(), HeroPosition, drawer.getStatusText());
@@ -301,18 +300,18 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		}
 	}
 	
-	public int checkHeroStatus(int speed) {
+	public void checkHeroStatus() {
 		String hsval = drawer.getStatusText();
 		int dur = drawer.getDuration();
 		switch (hsval) {
 		case "boost":
-			speed = 10;
+			drawer.setSpeed(10);
 			break;
 		case "slow":
-			speed = 2;
+			drawer.setSpeed(2);
 			break;
 		case "stun":
-			speed = 0;
+			drawer.setSpeed(0);
 			break;
 		case "none":
 			//do nothing---none
@@ -333,8 +332,6 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		if(dur == 0)
 			drawer.setStatus(".none"); 
 			//TODO: if stacking statuses need to modify to not remove all statuses here.
-
-		return speed;
 	}
 	
 	public void spawnMinions() {

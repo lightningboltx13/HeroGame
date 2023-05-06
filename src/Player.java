@@ -198,6 +198,16 @@ public class Player {
 	public void setLocationY(int locationY) {
 		this.locationY = locationY;
 	}
+
+	public int getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+	
+	
 	
 	
 	
