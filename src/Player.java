@@ -26,9 +26,9 @@ public class Player {
 		Point b = a.getLocation();
 		
 		g.setColor(Color.white);
-		if(status.equals("boost"))
+		if(status.contains("boost"))
 			g.setColor(new Color(200, 0, 150));
-		if(status.equals("defend"))
+		if(status.contains("defend"))
 			g.setColor(new Color(200,200,200));
 		
 		g.fillOval(Xloc - 10,  Yloc - 10, 20, 20);
