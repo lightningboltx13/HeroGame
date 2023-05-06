@@ -19,7 +19,6 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 	int world;
 	
 	int regen = 0;
-	boolean HeroPosition = false;
 
 	Player drawer = new Player();
 	
@@ -85,10 +84,11 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 				drawer.setLocationX(drawer.getLocationX() + drawer.getSpeed());
 			
 			//TODO: Modify to use values from class instead of passing them in.
-			drawer.drawHero(getGraphics(), drawer.getLocationX(), drawer.getLocationY(), HeroPosition, drawer.getStatusText());
+			drawer.drawHero(getGraphics(), drawer.getLocationX(), drawer.getLocationY(), drawer.isHeroPosition(), drawer.getStatusText());
 
 			
-			HeroPosition = false;
+			//TODO: Why do we set hero position? what is it used for?
+			drawer.setHeroPosition(false);
 			
 			//run blast moves
 			if(blasts.length > 0)
@@ -655,7 +655,7 @@ public class BattleMap extends Frame implements KeyListener, MouseListener, Focu
 		try{
 			if(drawer.getEnergy() > powerSet[powerIndex].cost)
 			{
-				HeroPosition = true;
+				drawer.setHeroPosition(true);
 				 drawer.setEnergy(drawer.getEnergy() - powerSet[powerIndex].cost);
 				
 				switch(powerSet[powerIndex].shape) {

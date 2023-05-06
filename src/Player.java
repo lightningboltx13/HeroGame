@@ -11,7 +11,7 @@ public class Player {
 	private int health=100;
 	private int regen=0;
 	private int speed;
-	private boolean HeroPosition = false;
+	private boolean heroPosition = false;
 	
 	//TODO: Change to double
 	private int locationX = 640;
@@ -206,6 +206,16 @@ public class Player {
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
+
+	public boolean isHeroPosition() {
+		return heroPosition;
+	}
+
+	public void setHeroPosition(boolean heroPosition) {
+		this.heroPosition = heroPosition;
+	}
+	
+	
 	
 	
 	
